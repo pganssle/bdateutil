@@ -12,7 +12,6 @@ from datetime import date, datetime
 
 from dateutil.parser import parse
 from dateutil.relativedelta import relativedelta as rd
-from dateutil.relativedelta import MO, TU, WE, TH, FR, SA, SU
 
 
 class relativedelta(rd):
