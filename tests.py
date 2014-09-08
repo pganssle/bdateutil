@@ -1,5 +1,5 @@
 #  bdateutil
-#  -----------
+#  ---------
 #  Adds business day logic and improved data type flexibility to
 #  python-dateutil.
 #
@@ -12,6 +12,7 @@ import unittest
 from datetime import date
 
 from bdateutil import relativedelta
+from testdateutil import *
 
 
 class TestRelativeDelta(unittest.TestCase):
@@ -97,9 +98,9 @@ class TestRelativeDelta(unittest.TestCase):
         self.assertFalse(r1 == r2)
         self.assertEquals(relativedelta(), relativedelta())
         self.assertTrue(relativedelta() == relativedelta())
-        self.assertNotEquals(relativedelta(), relativedelta(bdays=1))
+        self.assertNotEquals(relativedelta(days=1), relativedelta(bdays=1))
         self.assertFalse(relativedelta() == relativedelta(months=1))
-        self.assertNotEquals(relativedelta(), relativedelta(bdays=1))
+        self.assertNotEquals(relativedelta(days=1), relativedelta(bdays=1))
         self.assertFalse(relativedelta() == relativedelta(months=1))
 
     def test_ne(self):

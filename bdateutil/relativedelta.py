@@ -16,7 +16,7 @@ from dateutil.relativedelta import relativedelta as rd
 
 class relativedelta(rd):
 
-    def __init__(self, dt1=None, dt2=None, bdays=0,
+    def __init__(self, dt1=None, dt2=None, bdays=None,
                  holidays=(), *args, **kwargs):
         self.holidays = holidays
         if dt1 and dt2:
@@ -65,10 +65,15 @@ class relativedelta(rd):
     def __add__(self, other):
         if isinstance(other, relativedelta):
             ret = rd.__add__(self, other)
-            ret.bdays = getattr(other, 'bdays', 0) + self.bdays
+            if self.bdays is None:
+                ret.bdays = None
+            elif getattr(other, 'bdays', None) is None:
+                ret.bdays = self.bdays
+            else:
+                ret.bdays = self.bdays + other.bdays
             return ret
         ret = other
-        if hasattr(self, 'bdays'):
+        if getattr(self, 'bdays', None) is not None:
             bdays = self.bdays
             a = +1 if bdays > 0 else -1
             while bdays != 0:
@@ -83,17 +88,21 @@ class relativedelta(rd):
 
     def __sub__(self, other):
         ret = rd.__sub__(self, other)
-        ret.bdays = self.bdays - getattr(other, 'bdays', 0)
+        if getattr(self, 'bdays', None) is not None:
+            ret.bdays = self.bdays
+            if getattr(other, 'bdays', None) is not None:
+                ret.bdays -= other.bdays
         return ret
 
     def __rsub__(self, other):
         return self.__neg__().__radd__(other)
 
     def __neg__(self):
+        bdays = -self.bdays if self.bdays is not None else None
         return relativedelta(years=-self.years,
                              months=-self.months,
                              days=-self.days,
-                             bdays=-self.bdays,
+                             bdays=bdays,
                              hours=-self.hours,
                              minutes=-self.minutes,
                              seconds=-self.seconds,
@@ -109,16 +118,19 @@ class relativedelta(rd):
                              microsecond=self.microsecond)
 
     def __bool__(self):
+        if self.bdays is None:
+            return rd.__bool__(self)
         return rd.__bool__(self) or self.bdays
 
     __nonzero__ = __bool__
 
     def __mul__(self, other):
         f = float(other)
+        bdays = int(self.bdays*f) if self.bdays is not None else None
         return relativedelta(years=int(self.years*f),
                              months=int(self.months*f),
                              days=int(self.days*f),
-                             bdays=int(self.bdays*f),
+                             bdays=bdays,
                              hours=int(self.hours*f),
                              minutes=int(self.minutes*f),
                              seconds=int(self.seconds*f),
@@ -134,10 +146,13 @@ class relativedelta(rd):
                              microsecond=self.microsecond)
 
     def __eq__(self, other):
-        if hasattr(other, 'bdays'):
-            return (rd.__eq__(self, other)
-                    and self.bdays == getattr(other, 'bdays'))
+        if self.bdays is not None:
+            if getattr(other, 'bdays', None) is not None:
+                return rd.__eq__(self, other) and self.bdays == other.bdays
         return rd.__eq__(self, other)
+
+    def __ne__(self, other):
+        return not self.__eq__(other)
 
     def __repr__(self):
         l = []
