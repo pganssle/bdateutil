@@ -11,7 +11,8 @@ __version__ = '0.1-dev'
 
 
 from dateutil.relativedelta import MO, TU, WE, TH, FR, SA, SU
-from relativedelta import relativedelta
+
+from bdateutil.relativedelta import relativedelta
 
 
 __all__ = ['relativedelta', 'MO', 'TU', 'WE', 'TH', 'FR', 'SA', 'SU']
