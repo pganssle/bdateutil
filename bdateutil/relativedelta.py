@@ -12,6 +12,7 @@ from datetime import date, datetime
 
 from dateutil.parser import parse
 from dateutil.relativedelta import relativedelta as rd
+import six
 
 
 class relativedelta(rd):
@@ -25,7 +26,7 @@ class relativedelta(rd):
                 dt1 = datetime.combine(dt1, datetime.min.time())
             elif isinstance(dt1, int) or isinstance(dt1, float):
                 dt1 = datetime.fromtimestamp(dt1)
-            elif is_string(dt1):
+            elif isinstance(dt1, six.string_types):
                 try:
                     dt1 = parse(dt1)
                 except TypeError:
@@ -36,7 +37,7 @@ class relativedelta(rd):
                 dt2 = datetime.combine(dt2, datetime.min.time())
             elif isinstance(dt2, int) or isinstance(dt2, float):
                 dt2 = datetime.fromtimestamp(dt2)
-            elif is_string(dt2):
+            elif isinstance(dt2, six.string_types):
                 try:
                     dt2 = parse(dt2)
                 except TypeError:
@@ -167,12 +168,3 @@ class relativedelta(rd):
             if value is not None:
                 l.append("%s=%s" % (attr, repr(value)))
         return "%s(%s)" % (self.__class__.__name__, ", ".join(l))
-
-
-def is_string(s):
-    try:
-        # Python 2
-        return isinstance(s, str) or isinstance(s, unicode)
-    except NameError:
-        # Python 3
-        return isinstance(s, bytes) or isinstance(s, str)
