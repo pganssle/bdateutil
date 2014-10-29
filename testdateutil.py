@@ -54,8 +54,8 @@ if os.path.exists("build"):
     s = os.path.join(os.getcwd(), s)
     sys.path.insert(0, s)
 
-from bdateutil import *
 #from dateutil.relativedelta import *
+from bdateutil.relativedelta import *
 from dateutil.parser import *
 from dateutil.easter import *
 from dateutil.rrule import *

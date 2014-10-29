@@ -1,1 +1,5 @@
+dist/
+MANIFEST
+.coverage
+*.egg-info
 *.pyc

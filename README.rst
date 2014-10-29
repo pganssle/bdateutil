@@ -3,6 +3,8 @@ bdateutil
 =========
 
 Adds business day logic and improved data type flexibility to python-dateutil.
+100% backwards compatible with python-dateutil, simply replace dateutil imports
+with bdateutil.
 
 
 Example Usage
@@ -58,6 +60,16 @@ Running Tests
 .. code-block:: bash
 
     $ python tests.py
+
+
+Coverage
+--------
+
+.. code-block:: bash
+
+    $ pip install coverage
+    $ coverage run --omit=*site-packages* tests.py
+    $ coverage report
 
 
 Contributions
