@@ -44,6 +44,80 @@ If the above fails, please use easy_install instead:
     $ easy_install bdateutil
 
 
+Documentation
+-------------
+
+This section will outline the additional functionality of bdateutil only. For
+full documentation on the features provided by python-dateutil please see its
+documentation at https://labix.org/python-dateutil.
+
+bdateutil is 100% backwards compatible with python-dateutil. You can replace
+`dateutil` with `bdateutil` across your entire project and everything will
+continue to work the same but you will have access to the following additional
+features:
+
+1. A new, optional, keyword argument `bdays` is available when using
+   relativedelta to add or remove time to a datetime object.
+
+.. code-block:: python
+
+    >>> date(2014, 1, 1) + relativedelta(bdays=+5)
+    date(2014, 1, 8)
+
+2. When passing two datetime arguments to relativedelta, the resulting
+   relativedelta object will contain a `bdays` attribute with the number of
+   business days between the datetime arguments.
+
+.. code-block:: python
+
+    >>> relativedelta(date(2014, 7, 7), date(2014, 7, 3))
+    relativedelta(days=+4, bdays=+2)
+
+3. Another new, optional, keyword argument `holidays` is available when using
+   relativedelta to support the `bdays` feature. Without holidays business days
+   are only calculated using weekdays. By passing a list of holidays a more
+   accurate and useful business day calculation can be performed. The Python
+   package holidays.py is installed as a requirement with bdateutil and that is
+   the prefered way to generate holidays.
+
+.. code-block:: python
+
+    >>> from bdateutil import relativedelta
+    >>> from holidays import UnitedStates
+    >>> date(2014, 7, 3) + relativedelta(bdays=+2)
+    datetime.date(2014, 7, 7)
+    >>> date(2014, 7, 3) + relativedelta(bdays=+2, holidays=UnitedStates())
+    datetime.date(2014, 7, 8)
+
+4. In addition to `datetime` and `date` types, relativedelta works with strings
+   and integer/float timestamps.
+
+.. code-block:: python
+
+    >>> relativedelta('2014-07-07', '2014-07-03')
+    relativedelta(days=+4, bdays=+2)
+
+    >>> # This example does not work yet
+    >>> "2014-01-01" + relativedelta(days=+2)
+    date(2014, 1, 3)
+
+5. Import shortcuts are available that make importing the bdateutil features a
+   little easier than python-dateutil. However, importing from bdateutil using
+   the longer method used by python-dateutil still works to remain 100%
+   backwards compatibility.
+
+.. code-block:: python
+
+    >>> # Importing relativedelta from the original python-dateutil package
+    >>> from dateutil.relativedelta import relativedelta
+
+    >>> # This method works with bdateutil
+    >>> from bdateutil.relativedelta import relativedelta
+
+    >>> # bdateutil also provides an easier way
+    >>> from bdateutil import relativedelta
+
+
 Development Version
 -------------------
 
