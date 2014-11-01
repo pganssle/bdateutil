@@ -52,11 +52,11 @@ full documentation on the features provided by python-dateutil please see its
 documentation at https://labix.org/python-dateutil.
 
 bdateutil is 100% backwards compatible with python-dateutil. You can replace
-`dateutil` with `bdateutil` across your entire project and everything will
+:code:`dateutil` with :code:`bdateutil` across your entire project and everything will
 continue to work the same but you will have access to the following additional
 features:
 
-1. A new, optional, keyword argument `bdays` is available when using
+1. A new, optional, keyword argument :code:`bdays` is available when using
    relativedelta to add or remove time to a datetime object.
 
 .. code-block:: python
@@ -65,7 +65,7 @@ features:
     date(2014, 1, 8)
 
 2. When passing two datetime arguments to relativedelta, the resulting
-   relativedelta object will contain a `bdays` attribute with the number of
+   relativedelta object will contain a :code:`bdays` attribute with the number of
    business days between the datetime arguments.
 
 .. code-block:: python
@@ -73,8 +73,8 @@ features:
     >>> relativedelta(date(2014, 7, 7), date(2014, 7, 3))
     relativedelta(days=+4, bdays=+2)
 
-3. Another new, optional, keyword argument `holidays` is available when using
-   relativedelta to support the `bdays` feature. Without holidays business days
+3. Another new, optional, keyword argument :code:`holidays` is available when using
+   relativedelta to support the :code:`bdays` feature. Without holidays business days
    are only calculated using weekdays. By passing a list of holidays a more
    accurate and useful business day calculation can be performed. The Python
    package holidays.py is installed as a requirement with bdateutil and that is
@@ -89,7 +89,7 @@ features:
     >>> date(2014, 7, 3) + relativedelta(bdays=+2, holidays=UnitedStates())
     datetime.date(2014, 7, 8)
 
-4. In addition to `datetime` and `date` types, relativedelta works with strings
+4. In addition to :code:`datetime` and :code:`date` types, relativedelta works with strings
    and integer/float timestamps.
 
 .. code-block:: python
