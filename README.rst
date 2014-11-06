@@ -6,6 +6,9 @@ Adds business day logic and improved data type flexibility to python-dateutil.
 100% backwards compatible with python-dateutil, simply replace dateutil imports
 with bdateutil.
 
+.. image:: http://img.shields.io/travis/ryanss/bdateutil.svg
+    :target: https://travis-ci.org/ryanss/bdateutil
+
 
 Example Usage
 -------------------
