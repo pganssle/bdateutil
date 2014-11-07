@@ -9,6 +9,9 @@ with bdateutil.
 .. image:: http://img.shields.io/travis/ryanss/bdateutil.svg
     :target: https://travis-ci.org/ryanss/bdateutil
 
+.. image:: http://img.shields.io/coveralls/ryanss/bdateutil.svg
+    :target: https://coveralls.io/r/ryanss/bdateutil
+
 
 Example Usage
 -------------------
