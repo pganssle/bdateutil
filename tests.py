@@ -21,13 +21,13 @@ class TestRelativeDelta(unittest.TestCase):
 
     def test_init(self):
         self.assertEqual(relativedelta(date(2014, 1, 7), date(2014, 1, 3)),
-                          relativedelta(days=4, bdays=2))
+                         relativedelta(days=4, bdays=2))
         self.assertEqual(relativedelta(date(2014, 1, 31), date(2014, 1, 1)),
-                          relativedelta(days=30, bdays=22))
+                         relativedelta(days=30, bdays=22))
         self.assertEqual(relativedelta(date(2014, 2, 1), date(2014, 1, 1)),
-                          relativedelta(months=1, bdays=23))
+                         relativedelta(months=1, bdays=23))
         self.assertEqual(relativedelta(date(2014, 2, 2), date(2014, 1, 1)),
-                          relativedelta(months=1, days=1, bdays=23))
+                         relativedelta(months=1, days=1, bdays=23))
 
     def test_add(self):
         rd1 = relativedelta(years=+1, months=+2, bdays=+3, days=+4)
@@ -35,15 +35,15 @@ class TestRelativeDelta(unittest.TestCase):
         rd3 = relativedelta(years=+3, months=-1, bdays=+7, days=+9)
         self.assertEqual(rd1 + rd2, rd3)
         self.assertEqual(relativedelta(bdays=3) + date(2014, 1, 3),
-                          date(2014, 1, 8))
+                         date(2014, 1, 8))
 
     def test_radd(self):
         self.assertEqual(date(2014, 1, 3) + relativedelta(bdays=2),
-                          date(2014, 1, 7))
+                         date(2014, 1, 7))
         self.assertEqual(date(2014, 1, 7) + relativedelta(bdays=-2),
-                          date(2014, 1, 3))
+                         date(2014, 1, 3))
         self.assertEqual(date(2014, 2, 3) + relativedelta(bdays=-19),
-                          date(2014, 1, 7))
+                         date(2014, 1, 7))
 
     def test_sub(self):
         rd1 = relativedelta(years=+1, months=+2, bdays=+3, days=+4)
@@ -53,15 +53,15 @@ class TestRelativeDelta(unittest.TestCase):
 
     def test_rsub(self):
         self.assertEqual(date(2014, 1, 7) - relativedelta(bdays=2),
-                          date(2014, 1, 3))
+                         date(2014, 1, 3))
         self.assertEqual(date(2014, 1, 3) - relativedelta(bdays=-2),
-                          date(2014, 1, 7))
+                         date(2014, 1, 7))
         self.assertEqual(date(2014, 2, 3) - relativedelta(bdays=19),
-                          date(2014, 1, 7))
+                         date(2014, 1, 7))
 
     def test_neg(self):
         self.assertEqual(-relativedelta(years=+1, bdays=-3),
-                          relativedelta(years=-1, bdays=+3))
+                         relativedelta(years=-1, bdays=+3))
 
     def test_bool(self):
         self.assertTrue(relativedelta(bdays=1))
@@ -70,19 +70,19 @@ class TestRelativeDelta(unittest.TestCase):
 
     def test_mul(self):
         self.assertEqual(relativedelta(years=+1, bdays=-3) * 3,
-                          relativedelta(years=+3, bdays=-9))
+                         relativedelta(years=+3, bdays=-9))
         self.assertEqual(relativedelta(years=+1, bdays=-3) * -3,
-                          relativedelta(years=-3, bdays=+9))
+                         relativedelta(years=-3, bdays=+9))
         self.assertEqual(relativedelta(years=+1, bdays=-3) * 0,
-                          relativedelta(years=0, bdays=0))
+                         relativedelta(years=0, bdays=0))
 
     def test_rmul(self):
         self.assertEqual(3 * relativedelta(years=+1, bdays=-3),
-                          relativedelta(years=+3, bdays=-9))
+                         relativedelta(years=+3, bdays=-9))
         self.assertEqual(-3 * relativedelta(years=+1, bdays=-3),
-                          relativedelta(years=-3, bdays=+9))
+                         relativedelta(years=-3, bdays=+9))
         self.assertEqual(0 * relativedelta(years=+1, bdays=-3),
-                          relativedelta(years=0, bdays=0))
+                         relativedelta(years=0, bdays=0))
 
     def test_eq(self):
         r1 = relativedelta(years=1, months=2, days=3, bdays=1,
@@ -122,15 +122,15 @@ class TestRelativeDelta(unittest.TestCase):
 
     def test_div(self):
         self.assertEqual(relativedelta(years=+3, bdays=-9) / 3,
-                          relativedelta(years=+1, bdays=-3))
+                         relativedelta(years=+1, bdays=-3))
         self.assertEqual(relativedelta(years=+3, bdays=-9) / -3,
-                          relativedelta(years=-1, bdays=+3))
+                         relativedelta(years=-1, bdays=+3))
         self.assertRaises(ZeroDivisionError,
                           lambda: relativedelta(bdays=-3) / 0)
 
     def test_truediv(self):
         self.assertEqual(relativedelta(years=+4, bdays=-10) / 3.0,
-                          relativedelta(years=+1, bdays=-3))
+                         relativedelta(years=+1, bdays=-3))
 
 
 if __name__ == "__main__":

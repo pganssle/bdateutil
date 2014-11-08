@@ -129,15 +129,15 @@ class relativedelta(rd):
 
     def __mul__(self, other):
         f = float(other)
-        bdays = int(self.bdays*f) if self.bdays is not None else None
-        return relativedelta(years=int(self.years*f),
-                             months=int(self.months*f),
-                             days=int(self.days*f),
+        bdays = int(self.bdays * f) if self.bdays is not None else None
+        return relativedelta(years=int(self.years * f),
+                             months=int(self.months * f),
+                             days=int(self.days * f),
                              bdays=bdays,
-                             hours=int(self.hours*f),
-                             minutes=int(self.minutes*f),
-                             seconds=int(self.seconds*f),
-                             microseconds=int(self.microseconds*f),
+                             hours=int(self.hours * f),
+                             minutes=int(self.minutes * f),
+                             seconds=int(self.seconds * f),
+                             microseconds=int(self.microseconds * f),
                              leapdays=self.leapdays,
                              year=self.year,
                              month=self.month,

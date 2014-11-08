@@ -12,7 +12,11 @@ python:
 
 install:
     - pip install python-dateutil
+    - pip install flake8
     - pip install coveralls
+
+before_script:
+    - flake8 bdateutil/*.py tests.py --ignore=F401,F403
 
 script:
     - coverage run --omit=*site-packages*,*pypy* tests.py
