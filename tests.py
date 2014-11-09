@@ -159,7 +159,7 @@ class TestRelativeDelta(unittest.TestCase):
 class TestParser(unittest.TestCase):
 
     def test_timestamp(self):
-        self.assertEqual(parse(1388552400), datetime(2014, 1, 1))
+        self.assertEqual(parse(1388577600).date(), date(2014, 1, 1))
 
     def test_parserinfo(self):
         self.assertEqual(parse("1/2/2014"), datetime(2014, 1, 2))
