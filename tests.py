@@ -10,9 +10,11 @@
 
 
 import unittest
-from datetime import date
+from datetime import date, datetime
 
 from bdateutil import relativedelta
+from bdateutil import parse
+from bdateutil.rrule import *
 
 from testdateutil import *
 
@@ -131,6 +133,17 @@ class TestRelativeDelta(unittest.TestCase):
     def test_truediv(self):
         self.assertEqual(relativedelta(years=+4, bdays=-10) / 3.0,
                          relativedelta(years=+1, bdays=-3))
+
+
+class TestRRule(unittest.TestCase):
+
+    def test_bdaily(self):
+        start = parse("2014-01-01")
+        self.assertEqual(list(rrule(BDAILY, count=4, dtstart=start)),
+                         [datetime(2014, 1, 1, 0, 0),
+                          datetime(2014, 1, 2, 0, 0),
+                          datetime(2014, 1, 3, 0, 0),
+                          datetime(2014, 1, 6, 0, 0)])
 
 
 if __name__ == "__main__":
