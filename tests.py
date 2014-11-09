@@ -30,6 +30,8 @@ class TestRelativeDelta(unittest.TestCase):
                          relativedelta(months=1, bdays=23))
         self.assertEqual(relativedelta(date(2014, 2, 2), date(2014, 1, 1)),
                          relativedelta(months=1, days=1, bdays=23))
+        self.assertEqual(relativedelta(date(2014, 1, 1), date(2014, 2, 2)),
+                         relativedelta(months=-1, days=-1, bdays=-23))
 
     def test_add(self):
         rd1 = relativedelta(years=+1, months=+2, bdays=+3, days=+4)
@@ -38,6 +40,11 @@ class TestRelativeDelta(unittest.TestCase):
         self.assertEqual(rd1 + rd2, rd3)
         self.assertEqual(relativedelta(bdays=3) + date(2014, 1, 3),
                          date(2014, 1, 8))
+        rd4 = relativedelta(years=+1, months=+2, days=+1)
+        rd5 = relativedelta(years=+4, months=+1, bdays=+7, days=+10)
+        self.assertEqual(rd3 + rd4, rd5)
+        self.assertEqual("2014-01-01" + relativedelta(weekday=FR),
+                         datetime(2014, 1, 3))
 
     def test_radd(self):
         self.assertEqual(date(2014, 1, 3) + relativedelta(bdays=2),
@@ -133,6 +140,20 @@ class TestRelativeDelta(unittest.TestCase):
     def test_truediv(self):
         self.assertEqual(relativedelta(years=+4, bdays=-10) / 3.0,
                          relativedelta(years=+1, bdays=-3))
+
+    def test_repr(self):
+        rd1 = relativedelta(years=+1, months=+2, days=-3)
+        self.assertEqual(str(rd1),
+                         "relativedelta(years=+1, months=+2, days=-3)")
+        rd2 = relativedelta(years=+1, months=+2, bdays=-7)
+        self.assertEqual(str(rd2),
+                         "relativedelta(years=+1, months=+2, bdays=-7)")
+        rd3 = relativedelta(years=-1, months=-2, bdays=+7)
+        self.assertEqual(str(rd3),
+                         "relativedelta(years=-1, months=-2, bdays=+7)")
+        rd4 = relativedelta(year=2014, month=1, day=2)
+        self.assertEqual(str(rd4),
+                         "relativedelta(year=2014, month=1, day=2)")
 
 
 class TestRRule(unittest.TestCase):
