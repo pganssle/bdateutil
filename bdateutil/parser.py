@@ -32,5 +32,5 @@ def parse(timestr, parserinfo=None, **kwargs):
     elif isinstance(timestr, datetime) or isinstance(timestr, date):
         ret = timestr
     else:
-        raise TypeError("Can't convert type '%s' to date." % type(timestr))
+        raise TypeError("Can't convert %s to date." % type(timestr))
     return ret

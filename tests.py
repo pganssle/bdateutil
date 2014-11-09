@@ -156,6 +156,24 @@ class TestRelativeDelta(unittest.TestCase):
                          "relativedelta(year=2014, month=1, day=2)")
 
 
+class TestParser(unittest.TestCase):
+
+    def test_timestamp(self):
+        self.assertEqual(parse(1388552400), datetime(2014, 1, 1))
+
+    def test_parserinfo(self):
+        self.assertEqual(parse("1/2/2014"), datetime(2014, 1, 2))
+        self.assertEqual(parse(b"1/2/2014"), datetime(2014, 1, 2))
+        self.assertEqual(parse("1/2/2014", dayfirst=True),
+                         datetime(2014, 2, 1))
+        self.assertEqual(parse("1/2/2014", parserinfo(dayfirst=True)),
+                         datetime(2014, 2, 1))
+
+    def test_exceptions(self):
+        self.assertRaises(ValueError, lambda: parse("abc"))
+        self.assertRaises(TypeError, lambda: parse(['a', 'b', 'c']))
+
+
 class TestRRule(unittest.TestCase):
 
     def test_bdaily(self):

@@ -43,17 +43,6 @@ import calendar
 import base64
 import os
 
-# Add build directory to search path
-if os.path.exists("build"):
-    from distutils.util import get_platform
-    import sys
-    if sys.version_info >= (3, 2):
-        s = "build/lib"
-    else:
-        s = "build/lib.%s-%.3s" % (get_platform(), sys.version)
-    s = os.path.join(os.getcwd(), s)
-    sys.path.insert(0, s)
-
 from bdateutil.relativedelta import *
 from bdateutil.parser import *
 from bdateutil.easter import *
@@ -62,6 +51,13 @@ from bdateutil.tz import *
 from bdateutil import zoneinfo
 
 from datetime import *
+
+
+try:
+    long
+except:
+    # There is no `long` in Python3
+    long = int
 
 
 class RelativeDeltaTest(unittest.TestCase):
@@ -2458,25 +2454,24 @@ class RRuleTest(unittest.TestCase):
                           datetime(2010, 3, 22, 14, 1)])
 
     def testLongIntegers(self):
-        if not PY3:  # There is no longs in python3
-            self.assertEqual(list(rrule(MINUTELY,
-                                  count=long(2),
-                                  interval=long(2),
-                                  bymonth=long(2),
-                                  byweekday=long(3),
-                                  byhour=long(6),
-                                  byminute=long(6),
-                                  bysecond=long(6),
-                                  dtstart=parse("19970902T090000"))),
-                             [datetime(1998, 2, 5, 6, 6, 6),
-                              datetime(1998, 2, 12, 6, 6, 6)])
-            self.assertEqual(list(rrule(YEARLY,
-                                  count=long(2),
-                                  bymonthday=long(5),
-                                  byweekno=long(2),
-                                  dtstart=parse("19970902T090000"))),
-                             [datetime(1998, 1, 5, 9, 0),
-                              datetime(2004, 1, 5, 9, 0)])
+        self.assertEqual(list(rrule(MINUTELY,
+                              count=long(2),
+                              interval=long(2),
+                              bymonth=long(2),
+                              byweekday=long(3),
+                              byhour=long(6),
+                              byminute=long(6),
+                              bysecond=long(6),
+                              dtstart=parse("19970902T090000"))),
+                         [datetime(1998, 2, 5, 6, 6, 6),
+                          datetime(1998, 2, 12, 6, 6, 6)])
+        self.assertEqual(list(rrule(YEARLY,
+                              count=long(2),
+                              bymonthday=long(5),
+                              byweekno=long(2),
+                              dtstart=parse("19970902T090000"))),
+                         [datetime(1998, 1, 5, 9, 0),
+                          datetime(2004, 1, 5, 9, 0)])
 
     def testUntilNotMatching(self):
         self.assertEqual(list(rrule(DAILY,
@@ -3082,10 +3077,9 @@ class ParserTest(unittest.TestCase):
                                   tzinfo=self.brsttz))
 
     def testDateCommandFormatWithLong(self):
-        if not PY3:
-            self.assertEqual(parse("Thu Sep 25 10:36:28 BRST 2003",
-                                   tzinfos={"BRST": long(-10800)}),
-                             datetime(2003, 9, 25, 10, 36, 28,
+        self.assertEqual(parse("Thu Sep 25 10:36:28 BRST 2003",
+                               tzinfos={"BRST": long(-10800)}),
+                         datetime(2003, 9, 25, 10, 36, 28,
                                       tzinfo=self.brsttz))
     def testDateCommandFormatIgnoreTz(self):
         self.assertEqual(parse("Thu Sep 25 10:36:28 BRST 2003",
@@ -4049,7 +4043,3 @@ END:VTIMEZONE
                           datetime(2007, 8, 6, 6, 10, tzinfo=tzstr("GMT+2")))
         self.assertEqual(dt.astimezone(tz=gettz("UTC-2")),
                           datetime(2007, 8, 6, 2, 10, tzinfo=tzstr("UTC-2")))
-
-
-if __name__ == "__main__":
-    unittest.main()
