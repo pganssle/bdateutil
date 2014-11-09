@@ -11,6 +11,12 @@
 __version__ = '0.1-dev'
 
 
+from bdateutil.parser import parse
 from bdateutil.relativedelta import relativedelta
 from bdateutil.relativedelta import MO, TU, WE, TH, FR, SA, SU
-from bdateutil.parser import parse
+from bdateutil.rrule import *
+
+
+def isbday(dt, holidays=()):
+    dt = parse(dt)
+    return not (dt.weekday() in (5, 6) or dt in holidays)

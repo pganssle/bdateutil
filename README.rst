@@ -14,24 +14,41 @@ with bdateutil.
 
 
 Example Usage
--------------------
+-------------
 
 .. code-block:: python
 
+    # Test if a date is a business day
+    >>> from bdateutil import isbday
+    >>> isbdate(date(2014, 1, 1))
+    True
+    # Take into account U.S. statutory holidays
+    >>> import holidays
+    >>> isbday("2014-01-01", holidays=holidays.US())
+    False
+
+    # Increment date by two business days
     >>> from bdateutil import relativedelta
-    >>> from holidays import UnitedStates
-    >>> relativedelta(date(2014, 7, 7), date(2014, 7, 3))
-    relativedelta(days=+4, bdays=+2)
-    >>> relativedelta('2014-07-07', '2014-07-03', holidays=UnitedStates())
-    relativedelta(days=+4, bdays=+1)
     >>> date(2014, 7, 3) + relativedelta(bdays=+2)
-    datetime.date(2014,7,7)
-    >>> date(2014, 7, 3) + relativedelta(bdays=+2, holidays=UnitedStates())
+    datetime.date(2014, 7, 7)
+    # Take into account U.S. statutory holidays
+    >>> "2014-07-03" + relativedelta(bdays=+2, holidays=holidays.US())
     datetime.date(2014, 7, 8)
-    >>> date(2014, 7, 3) + relativedelta(bdays=-4)
-    datetime.date(2014, 6, 27)
-    >>> date(2014, 7, 3) - relativedelta(bdays=+4)
-    datetime.date(2014, 6, 27)
+
+    # Determine how many business days between two dates
+    >>> relativedelta("2014-07-07", date(2014, 7, 3))
+    relativedelta(days=+4, bdays=+2)
+    # Take into account Canadian statutory holidays
+    >>> from holidays import Canada
+    >>> relativedelta('2014-07-07', '07/03/2014', holidays=Canada())
+    relativedelta(days=+4, bdays=+1)
+
+    # Get a list of the next 10 business days starting 2014-01-01
+    >>> from bdateutil import rrule, BDAILY
+    >>> list(rrule(BDAILY, count=10, dtstart=date(2014, 1, 1)))
+    # Take into account British Columbia, Canada statutory holidays
+    >>> list(rrule(BDAILY, count=10, dtstart=date(2014, 1, 1),
+                   holidays=Canada(prov='BC')))
 
 
 Install

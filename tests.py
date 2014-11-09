@@ -12,11 +12,22 @@
 import unittest
 from datetime import date, datetime
 
+import holidays
+
+from bdateutil import isbday
 from bdateutil import relativedelta
 from bdateutil import parse
 from bdateutil.rrule import *
 
 from testdateutil import *
+
+
+class TestIsBday(unittest.TestCase):
+
+    def test_isbday(self):
+        self.assertFalse(isbday(date(2014, 1, 4)))
+        self.assertTrue(isbday(date(2014, 1, 1)))
+        self.assertFalse(isbday(date(2014, 1, 1), holidays=holidays.US()))
 
 
 class TestRelativeDelta(unittest.TestCase):
