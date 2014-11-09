@@ -11,10 +11,11 @@
 
 from datetime import date, datetime
 
-from dateutil.parser import parse
 from dateutil.relativedelta import relativedelta as rd
 from dateutil.relativedelta import MO, TU, WE, TH, FR, SA, SU
 import six
+
+from bdateutil.parser import parse
 
 
 class relativedelta(rd):
@@ -24,28 +25,12 @@ class relativedelta(rd):
         self.holidays = holidays
         if dt1 and dt2:
             # Convert to datetime objects
+            dt1 = parse(dt1)
+            dt2 = parse(dt2)
             if isinstance(dt1, date) and not isinstance(dt1, datetime):
                 dt1 = datetime.combine(dt1, datetime.min.time())
-            elif isinstance(dt1, int) or isinstance(dt1, float):
-                dt1 = datetime.fromtimestamp(dt1)
-            elif isinstance(dt1, six.string_types):
-                try:
-                    dt1 = parse(dt1)
-                except TypeError:
-                    raise ValueError("Can't parse date from string '%s'" % dt1)
-            elif not isinstance(dt1, datetime):
-                raise TypeError("Can't convert type '%s' to date." % type(dt1))
             if isinstance(dt2, date) and not isinstance(dt2, datetime):
                 dt2 = datetime.combine(dt2, datetime.min.time())
-            elif isinstance(dt2, int) or isinstance(dt2, float):
-                dt2 = datetime.fromtimestamp(dt2)
-            elif isinstance(dt2, six.string_types):
-                try:
-                    dt2 = parse(dt2)
-                except TypeError:
-                    raise ValueError("Can't parse date from string '%s'" % dt2)
-            elif not isinstance(dt2, datetime):
-                raise TypeError("Can't convert type '%s' to date." % type(dt2))
             # Call super init before setting self.bdays to avoid base __radd__
             # from calling child __add__ and creating infinite loop
             rd.__init__(self, dt1, dt2, *args, **kwargs)
@@ -75,7 +60,7 @@ class relativedelta(rd):
             else:
                 ret.bdays = self.bdays + other.bdays
             return ret
-        ret = other
+        ret = parse(other)
         if getattr(self, 'bdays', None) is not None:
             bdays = self.bdays
             a = +1 if bdays > 0 else -1

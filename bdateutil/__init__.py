@@ -11,6 +11,6 @@
 __version__ = '0.1-dev'
 
 
-from dateutil.relativedelta import MO, TU, WE, TH, FR, SA, SU
-
 from bdateutil.relativedelta import relativedelta
+from bdateutil.relativedelta import MO, TU, WE, TH, FR, SA, SU
+from bdateutil.parser import parse
