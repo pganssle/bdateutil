@@ -1,0 +1,5 @@
+include bdateutil/*.py
+include *.py
+include *.rst
+include CHANGES
+include LICENSE
