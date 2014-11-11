@@ -195,6 +195,18 @@ class TestRRule(unittest.TestCase):
                           datetime(2014, 1, 3, 0, 0),
                           datetime(2014, 1, 6, 0, 0)])
 
+    def test_parse(self):
+        self.assertEqual(list(rrule(BDAILY, count=4, dtstart="2014-01-01")),
+                         [datetime(2014, 1, 1, 0, 0),
+                          datetime(2014, 1, 2, 0, 0),
+                          datetime(2014, 1, 3, 0, 0),
+                          datetime(2014, 1, 6, 0, 0)])
+        self.assertEqual(list(rrule(BDAILY, count=4, dtstart="2014-01-01",
+                                    until="01/04/2014")),
+                         [datetime(2014, 1, 1, 0, 0),
+                          datetime(2014, 1, 2, 0, 0),
+                          datetime(2014, 1, 3, 0, 0)])
+
 
 if __name__ == "__main__":
     unittest.main()

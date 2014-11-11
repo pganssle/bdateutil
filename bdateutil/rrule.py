@@ -2,6 +2,8 @@ from dateutil.rrule import *
 from dateutil.rrule import rrule as rrulebase
 from dateutil.rrule import _rrulestr as rrulestrbase
 
+from bdateutil import parse
+
 
 BDAILY = 8
 
@@ -9,6 +11,10 @@ BDAILY = 8
 class rrule(rrulebase):
 
     def __init__(self, freq, **kwargs):
+        if 'dtstart' in kwargs:
+            kwargs['dtstart'] = parse(kwargs['dtstart'])
+        if 'until' in kwargs:
+            kwargs['until'] = parse(kwargs['until'])
         if freq == BDAILY:
             rrulebase.__init__(self, DAILY, **kwargs)
             self._bdaily = True
