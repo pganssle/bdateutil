@@ -3,8 +3,8 @@ bdateutil
 =========
 
 Adds business day logic and improved data type flexibility to python-dateutil.
-100% backwards compatible with python-dateutil, simply replace dateutil imports
-with bdateutil.
+100% backwards compatible with python-dateutil, simply replace :code:`dateutil`
+imports with :code:`bdateutil`.
 
 .. image:: http://img.shields.io/travis/ryanss/bdateutil.svg
     :target: https://travis-ci.org/ryanss/bdateutil
@@ -20,8 +20,17 @@ Example Usage
 
     # Test if a date is a business day
     >>> from bdateutil import isbday
-    >>> isbdate(date(2014, 1, 1))
+    >>> isbday(date(2014, 1, 1))
     True
+
+    # Date parameters are no longer limited to datetime objects
+    >>> isbday("2014-01-01")
+    True
+    >>> isbday("1/1/2014")
+    True
+    >>> isbday(1388577600)  # Unix timestamp = Jan 1, 2014
+    True
+
     # Take into account U.S. statutory holidays
     >>> import holidays
     >>> isbday("2014-01-01", holidays=holidays.US())
@@ -31,7 +40,11 @@ Example Usage
     >>> from bdateutil import relativedelta
     >>> date(2014, 7, 3) + relativedelta(bdays=+2)
     datetime.date(2014, 7, 7)
-    # Take into account U.S. statutory holidays
+
+    # Any arguments that take a date/datetime object now accept
+    # strings/unicode/bytes in any encoding and integer/float timestamps.
+    # All dateutil functions now also take an optional `holidays` argument
+    # for helping to work with business days.
     >>> "2014-07-03" + relativedelta(bdays=+2, holidays=holidays.US())
     datetime.date(2014, 7, 8)
 
@@ -75,9 +88,10 @@ full documentation on the features provided by python-dateutil please see its
 documentation at https://labix.org/python-dateutil.
 
 bdateutil is 100% backwards compatible with python-dateutil. You can replace
-:code:`dateutil` with :code:`bdateutil` across your entire project and everything will
-continue to work the same but you will have access to the following additional
-features:
+:code:`dateutil` with :code:`bdateutil` across your entire project and
+everything will continue to work the same but you will have access to the
+following additional features:
+
 
 1. A new, optional, keyword argument :code:`bdays` is available when using
    relativedelta to add or remove time to a datetime object.
@@ -88,20 +102,21 @@ features:
     date(2014, 1, 8)
 
 2. When passing two datetime arguments to relativedelta, the resulting
-   relativedelta object will contain a :code:`bdays` attribute with the number of
-   business days between the datetime arguments.
+   relativedelta object will contain a :code:`bdays` attribute with the number
+   of business days between the datetime arguments.
 
 .. code-block:: python
 
     >>> relativedelta(date(2014, 7, 7), date(2014, 7, 3))
     relativedelta(days=+4, bdays=+2)
 
-3. Another new, optional, keyword argument :code:`holidays` is available when using
-   relativedelta to support the :code:`bdays` feature. Without holidays business days
-   are only calculated using weekdays. By passing a list of holidays a more
-   accurate and useful business day calculation can be performed. The Python
-   package holidays.py is installed as a requirement with bdateutil and that is
-   the prefered way to generate holidays.
+3. Another new, optional, keyword argument :code:`holidays` is available when
+   using relativedelta to support the :code:`bdays` feature. Without holidays
+   business days are only calculated using weekdays. By passing a list of
+   holidays a more accurate and useful business day calculation can be
+   performed. The Python package :code:`holidays.py` is installed as a
+   requirement with bdateutil and that is the prefered way to generate
+   holidays.
 
 .. code-block:: python
 
@@ -112,19 +127,74 @@ features:
     >>> date(2014, 7, 3) + relativedelta(bdays=+2, holidays=UnitedStates())
     datetime.date(2014, 7, 8)
 
-4. In addition to :code:`datetime` and :code:`date` types, relativedelta works with strings
-   and integer/float timestamps.
+4. A new function :code:`isbday` which returns :code:`True` if the argument
+   passed to it falls on a business day and :code:`False` if it is a weekend or
+   holiday. Option keyword argument :code:`holidays` adds the ability to take
+   into account a specific set of holidays.
 
 .. code-block:: python
+
+    >>> from bdateutil import isbday
+    >>> isbday(date(2014, 1, 1))
+    True
+    >>> isbday("2014-01-01")
+    True
+    >>> isbday("1/1/2014")
+    True
+    >>> isbday(1388577600)  # Unix timestamp = Jan 1, 2014
+    True
+
+    # Take into account U.S. statutory holidays
+    >>> import holidays
+    >>> isbday("2014-01-01", holidays=holidays.US())
+    False
+
+5. In addition to :code:`datetime` and :code:`date` types, relativedelta works
+   with all strings/bytes regardless of encoding and integer/float timestamps.
+   It does this by running all date/datetime parameters through the
+   :code:`parse` function which has been modified to accept many different
+   types than strings, including date/datetime which will return without
+   modifications. This allows you to call :code:`parse(dt)` on an object
+   regardless of type and ensure a datetime object is returned.
+
+.. code-block:: python
+
+    >>> parse(date(2014, 1, 1))
+    datetime.date(2014, 1, 1)
+    >>> parse(datetime(2014, 1, 1))
+    datetime.datetime(2014, 1, 1, 0, 0)
+    >>> parse("2014-01-01")
+    datetime.datetime(2014, 1, 1, 0, 0)
+    >>> parse("1/1/2014")
+    datetime.datetime(2014, 1, 1, 0, 0)
+    >>> parse(1388577600)
+    datetime.datetime(2014, 1, 1, 0, 0)
 
     >>> relativedelta('2014-07-07', '2014-07-03')
     relativedelta(days=+4, bdays=+2)
 
-    >>> # This example does not work yet
-    >>> "2014-01-01" + relativedelta(days=+2)
+    >>> 1388577600 + relativedelta(days=+2)
     date(2014, 1, 3)
 
-5. Import shortcuts are available that make importing the bdateutil features a
+6. The :code:`rrule` feature has a new :code:`BDAILY` option for use as the :code:`freq` argument.
+   This will create a generator which yields business days. Rrule also will now
+   accept an optional :code:`holidays` keyword argument which affects the
+   :code:`BDAILY` freq only. The existing :code:`dtstart` and :code:`until`
+   arugments can now be passed as any type resembling a date/datetime.
+
+.. code-block:: python
+
+    # Get a list of the next 10 business days starting 2014-01-01
+    >>> from bdateutil import rrule, BDAILY
+    >>> list(rrule(BDAILY, count=10, dtstart=date(2014, 1, 1)))
+
+    # Get a list of all business days in January 2014, taking into account
+    # Canadian statutory holidays
+    >>> import holidays
+    >>> list(rrule(BDAILY, dtstart="2014-01-01", until="2014-01-31",
+                   holidays=holidays.Canada()))
+
+7. Import shortcuts are available that make importing the bdateutil features a
    little easier than python-dateutil. However, importing from bdateutil using
    the longer method used by python-dateutil still works to remain 100%
    backwards compatibility.
