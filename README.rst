@@ -12,6 +12,15 @@ imports with :code:`bdateutil`.
 .. image:: http://img.shields.io/coveralls/ryanss/bdateutil.svg
     :target: https://coveralls.io/r/ryanss/bdateutil
 
+.. image:: http://img.shields.io/pypi/v/bdateutil.svg
+    :target: https://pypi.python.org/pypi/bdateutil
+
+.. image:: http://img.shields.io/pypi/dm/bdateutil.svg
+    :target: https://pypi.python.org/pypi/bdateutil
+
+.. image:: http://img.shields.io/pypi/l/bdateutil.svg
+    :target: https://github.com/ryanss/bdateutil/blob/master/LICENSE
+
 
 Example Usage
 -------------

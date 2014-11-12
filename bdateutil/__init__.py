@@ -8,7 +8,7 @@
 #  Website: https://github.com/ryanss/bdateutil
 #  License: MIT (see LICENSE file)
 
-__version__ = '0.1-dev'
+__version__ = '0.1'
 
 
 from bdateutil.parser import parse
