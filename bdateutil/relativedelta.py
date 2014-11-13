@@ -62,6 +62,8 @@ class relativedelta(rd):
             return ret
         ret = parse(other)
         if getattr(self, 'bdays', None) is not None:
+            while ret.weekday() in (5, 6) or ret in self.holidays:
+                ret += rd(days=1)
             bdays = self.bdays
             a = +1 if bdays > 0 else -1
             while bdays != 0:
@@ -83,6 +85,10 @@ class relativedelta(rd):
         return ret
 
     def __rsub__(self, other):
+        if getattr(self, 'bdays', None) is not None:
+            other = parse(other)
+            while other.weekday() in (5, 6) or other in self.holidays:
+                other += rd(days=-1)
         return self.__neg__().__radd__(other)
 
     def __neg__(self):

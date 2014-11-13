@@ -56,6 +56,18 @@ class TestRelativeDelta(unittest.TestCase):
         self.assertEqual(rd3 + rd4, rd5)
         self.assertEqual("2014-01-01" + relativedelta(weekday=FR),
                          datetime(2014, 1, 3))
+        self.assertEqual("2014-11-15" + relativedelta(bdays=1),
+                         datetime(2014, 11, 18))
+
+    def test_bdays_zero(self):
+        self.assertEqual("2014-11-15" + relativedelta(bdays=0),
+                         datetime(2014, 11, 17))
+        self.assertEqual("2014-11-17" + relativedelta(bdays=0),
+                         datetime(2014, 11, 17))
+        self.assertEqual("2014-11-15" - relativedelta(bdays=0),
+                         datetime(2014, 11, 14))
+        self.assertEqual("2014-11-14" - relativedelta(bdays=0),
+                         datetime(2014, 11, 14))
 
     def test_radd(self):
         self.assertEqual(date(2014, 1, 3) + relativedelta(bdays=2),
@@ -78,6 +90,8 @@ class TestRelativeDelta(unittest.TestCase):
                          date(2014, 1, 7))
         self.assertEqual(date(2014, 2, 3) - relativedelta(bdays=19),
                          date(2014, 1, 7))
+        self.assertEqual("2014-11-15" - relativedelta(bdays=1),
+                         datetime(2014, 11, 13))
 
     def test_neg(self):
         self.assertEqual(-relativedelta(years=+1, bdays=-3),
