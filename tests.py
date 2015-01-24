@@ -43,21 +43,39 @@ class TestRelativeDelta(unittest.TestCase):
                          relativedelta(months=1, days=1, bdays=23))
         self.assertEqual(relativedelta(date(2014, 1, 1), date(2014, 2, 2)),
                          relativedelta(months=-1, days=-1, bdays=-23))
+        self.assertEqual(relativedelta(datetime(2015, 1, 5, 9, 15),
+                                       datetime(2015, 1, 2, 16, 45)),
+                         relativedelta(days=2, hours=16, minutes=30,
+                                       bminutes=30))
 
     def test_add(self):
-        rd1 = relativedelta(years=+1, months=+2, bdays=+3, days=+4)
-        rd2 = relativedelta(years=+2, months=-3, bdays=+4, days=+5)
-        rd3 = relativedelta(years=+3, months=-1, bdays=+7, days=+9)
+        rd1 = relativedelta(years=+1, months=+2, bdays=+3, days=+4,
+                            bhours=+5, bminutes=+6, bseconds=+7,
+                            hours=+8, minutes=+9, seconds=+10)
+        rd2 = relativedelta(years=+10, months=-9, bdays=+8, days=-7,
+                            bhours=+6, bminutes=-5, bseconds=+4,
+                            hours=-3, minutes=+2, seconds=-1)
+        rd3 = relativedelta(years=+11, months=-7, bdays=+11, days=-3,
+                            bhours=+11, bminutes=-3, bseconds=+14,
+                            hours=+5, minutes=+11, seconds=+9)
         self.assertEqual(rd1 + rd2, rd3)
         self.assertEqual(relativedelta(bdays=3) + date(2014, 1, 3),
                          date(2014, 1, 8))
         rd4 = relativedelta(years=+1, months=+2, days=+1)
-        rd5 = relativedelta(years=+4, months=+1, bdays=+7, days=+10)
+        rd5 = relativedelta(years=+12, months=-5, bdays=+11, days=-2,
+                            #bhours=+11, bminutes=-3, bseconds=+14,
+                            hours=+5, minutes=+11, seconds=+9)
         self.assertEqual(rd3 + rd4, rd5)
         self.assertEqual("2014-01-01" + relativedelta(weekday=FR),
                          datetime(2014, 1, 3))
         self.assertEqual("2014-11-15" + relativedelta(bdays=1),
                          datetime(2014, 11, 18))
+
+    def test_add_time(self):
+        self.assertEqual("2015-01-02 16:45" + relativedelta(bminutes=+30),
+                         datetime(2015, 1, 5, 9, 15))
+        self.assertEqual(date(2015, 1, 2) + relativedelta(bminutes=+30),
+                         datetime(2015, 1, 2, 9, 30))
 
     def test_bdays_zero(self):
         self.assertEqual("2014-11-15" + relativedelta(bdays=0),
@@ -78,9 +96,15 @@ class TestRelativeDelta(unittest.TestCase):
                          date(2014, 1, 7))
 
     def test_sub(self):
-        rd1 = relativedelta(years=+1, months=+2, bdays=+3, days=+4)
-        rd2 = relativedelta(years=+2, months=-3, bdays=+4, days=+5)
-        rd3 = relativedelta(years=-1, months=+5, bdays=-1, days=-1)
+        rd1 = relativedelta(years=+1, months=+2, bdays=+3, days=+4,
+                            bhours=+5, bminutes=+6, bseconds=+7,
+                            hours=+8, minutes=+9, seconds=+10)
+        rd2 = relativedelta(years=+10, months=-9, bdays=+8, days=-7,
+                            bhours=+6, bminutes=-5, bseconds=+4,
+                            hours=-3, minutes=+2, seconds=-1)
+        rd3 = relativedelta(years=-9, months=+11, bdays=-5, days=+11,
+                            bhours=+2, bminutes=+11, bseconds=+3,
+                            hours=+11, minutes=+7, seconds=+11)
         self.assertEqual(rd1 - rd2, rd3)
 
     def test_rsub(self):

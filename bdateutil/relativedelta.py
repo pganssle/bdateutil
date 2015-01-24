@@ -20,8 +20,9 @@ from bdateutil.parser import parse
 
 class relativedelta(rd):
 
-    def __init__(self, dt1=None, dt2=None, bdays=None,
-                 holidays=(), *args, **kwargs):
+    def __init__(self, dt1=None, dt2=None, bdays=None, holidays=(),
+                 bhours=None, bminutes=None, bseconds=None,
+                 *args, **kwargs):
         self.holidays = holidays
         if dt1 and dt2:
             # Convert to datetime objects
@@ -35,42 +36,81 @@ class relativedelta(rd):
             # from calling child __add__ and creating infinite loop
             rd.__init__(self, dt1, dt2, *args, **kwargs)
             bdays = 0
+            bhours = 0
+            bminutes = 0
+            bseconds = 0
             d1 = max(dt1, dt2)
             d2 = min(dt1, dt2)
             if d1.weekday() in (5, 6) or d1 in self.holidays:
                 bdays += 1
+            while d1.second != d2.second:
+                d2 += rd(seconds=+1)
+                bseconds += 1
+                while d2.hour < 9 or d2.hour >= 17:
+                    d2 += rd(hours=+1)
+            while d1.minute != d2.minute:
+                d2 += rd(minutes=+1)
+                bminutes += 1
+                while d2.hour < 9 or d2.hour >= 17:
+                    d2 += rd(hours=+1)
+            while d1.hour != d2.hour:
+                d2 += rd(hours=+1)
+                bhours += 1
+                while (d1.hour >= 9 and d2.hour < 9) \
+                        or (d1.hour < 17 and d2.hour >= 17):
+                    d2 += rd(hours=+1)
             while d1 > d2:
-                d2 = rd(days=+1) + d2
+                d2 += rd(days=+1)
                 if d2.weekday() not in (5, 6) and d2 not in self.holidays:
                     bdays += 1
             self.bdays = bdays
+            self.bhours = bhours
+            self.bminutes = bminutes
+            self.bseconds = bseconds
             if dt2 > dt1:
                 self.bdays *= -1
+                self.bhours *= -1
+                self.bminutes *= -1
+                self.bseconds *= -1
         else:
             self.bdays = bdays
+            self.bhours = bhours
+            self.bminutes = bminutes
+            self.bseconds = bseconds
             rd.__init__(self, dt1, dt2, *args, **kwargs)
 
     def __add__(self, other):
         if isinstance(other, relativedelta):
             ret = rd.__add__(self, other)
-            if self.bdays is None:
-                ret.bdays = None
-            elif getattr(other, 'bdays', None) is None:
-                ret.bdays = self.bdays
-            else:
-                ret.bdays = self.bdays + other.bdays
+            for attr in ('bdays', 'bhours', 'bminutes', 'bseconds'):
+                if getattr(self, attr, None) is not None:
+                    setattr(ret, attr, None)
+                elif getattr(other, attr, None) is None:
+                    setattr(ret, attr, getattr(self, attr))
+                else:
+                    setattr(ret, attr, getattr(self, attr) + getattr(other, attr))
             return ret
         ret = parse(other)
-        if getattr(self, 'bdays', None) is not None:
-            while ret.weekday() in (5, 6) or ret in self.holidays:
-                ret += rd(days=1)
-            bdays = self.bdays
-            a = +1 if bdays > 0 else -1
-            while bdays != 0:
-                ret += rd(days=a)
+        # If we are adding any time (not just dates) the ret object to return
+        # must be a datetime object; a date object will not work
+        if not isinstance(ret, datetime) \
+                and (self.bhours or self.bminutes or self.bseconds):
+            ret = datetime.combine(ret, datetime.min.time())
+        for attr in ('bseconds', 'bminutes', 'bhours', 'bdays'):
+            if getattr(self, attr, None) is not None:
                 while ret.weekday() in (5, 6) or ret in self.holidays:
-                    ret += rd(days=a)
-                bdays -= a
+                    ret += rd(days=+1)
+                while attr != "bdays" and (ret.hour < 9 or ret.hour >= 17):
+                    ret += rd(**{attr[1:]: +1})
+                i = getattr(self, attr)
+                a = +1 if i > 0 else -1
+                while i != 0:
+                    ret += rd(**{attr[1:]: a})
+                    while ret.weekday() in (5, 6) or ret in self.holidays:
+                        ret += rd(days=a)
+                    while attr != "bdays" and (ret.hour < 9 or ret.hour >= 17):
+                        ret += rd(**{attr[1:]: a})
+                    i -= a
         return rd.__add__(self, ret)
 
     def __radd__(self, other):
@@ -78,10 +118,11 @@ class relativedelta(rd):
 
     def __sub__(self, other):
         ret = rd.__sub__(self, other)
-        if getattr(self, 'bdays', None) is not None:
-            ret.bdays = self.bdays
-            if getattr(other, 'bdays', None) is not None:
-                ret.bdays -= other.bdays
+        for attr in ('bdays', 'bhours', 'bminutes', 'bseconds'):
+            if getattr(self, attr, None) is not None:
+                setattr(ret, attr, getattr(self, attr))
+                if getattr(other, attr, None) is not None:
+                    setattr(ret, attr, getattr(ret, attr) - getattr(other, attr))
         return ret
 
     def __rsub__(self, other):
@@ -141,8 +182,10 @@ class relativedelta(rd):
 
     def __eq__(self, other):
         if self.bdays is not None:
-            if getattr(other, 'bdays', None) is not None:
-                return rd.__eq__(self, other) and self.bdays == other.bdays
+            for attr in ('bdays', 'bhours', 'bminutes', 'bseconds'):
+                if getattr(other, attr, None) is not None:
+                    return rd.__eq__(self, other) \
+                            and getattr(self, attr) == getattr(other, attr)
         return rd.__eq__(self, other)
 
     def __ne__(self, other):
@@ -151,7 +194,8 @@ class relativedelta(rd):
     def __repr__(self):
         l = []
         for attr in ["years", "months", "days", "leapdays", "bdays",
-                     "hours", "minutes", "seconds", "microseconds"]:
+                     "hours", "minutes", "seconds", "microseconds",
+                     "bhours", "bminutes", "bseconds"]:
             value = getattr(self, attr)
             if value:
                 l.append("%s=%+d" % (attr, value))
