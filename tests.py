@@ -63,7 +63,7 @@ class TestRelativeDelta(unittest.TestCase):
                          date(2014, 1, 8))
         rd4 = relativedelta(years=+1, months=+2, days=+1)
         rd5 = relativedelta(years=+12, months=-5, bdays=+11, days=-2,
-                            #bhours=+11, bminutes=-3, bseconds=+14,
+                            bhours=+11, bminutes=-3, bseconds=+14,
                             hours=+5, minutes=+11, seconds=+9)
         self.assertEqual(rd3 + rd4, rd5)
         self.assertEqual("2014-01-01" + relativedelta(weekday=FR),

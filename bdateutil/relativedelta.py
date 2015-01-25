@@ -88,7 +88,8 @@ class relativedelta(rd):
                 elif getattr(other, attr, None) is None:
                     setattr(ret, attr, getattr(self, attr))
                 else:
-                    setattr(ret, attr, getattr(self, attr) + getattr(other, attr))
+                    setattr(ret, attr,
+                            getattr(self, attr) + getattr(other, attr))
             return ret
         ret = parse(other)
         # If we are adding any time (not just dates) the ret object to return
@@ -122,7 +123,8 @@ class relativedelta(rd):
             if getattr(self, attr, None) is not None:
                 setattr(ret, attr, getattr(self, attr))
                 if getattr(other, attr, None) is not None:
-                    setattr(ret, attr, getattr(ret, attr) - getattr(other, attr))
+                    setattr(ret, attr,
+                            getattr(ret, attr) - getattr(other, attr))
         return ret
 
     def __rsub__(self, other):
@@ -185,7 +187,7 @@ class relativedelta(rd):
             for attr in ('bdays', 'bhours', 'bminutes', 'bseconds'):
                 if getattr(other, attr, None) is not None:
                     return rd.__eq__(self, other) \
-                            and getattr(self, attr) == getattr(other, attr)
+                        and getattr(self, attr) == getattr(other, attr)
         return rd.__eq__(self, other)
 
     def __ne__(self, other):
