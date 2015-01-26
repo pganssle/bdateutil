@@ -26,8 +26,16 @@ class TestIsBday(unittest.TestCase):
 
     def test_isbday(self):
         self.assertFalse(isbday(date(2014, 1, 4)))
+        self.assertFalse(isbday("2014-01-04"))
         self.assertTrue(isbday(date(2014, 1, 1)))
+        self.assertTrue(isbday("2014-01-01"))
         self.assertFalse(isbday(date(2014, 1, 1), holidays=holidays.US()))
+        self.assertTrue(isbday(datetime(2014, 1, 1, 16, 30)))
+        self.assertTrue(isbday(datetime(2014, 1, 1, 17, 30)))
+        self.assertFalse(isbday(datetime(2014, 1, 1, 16, 30),
+                         holidays=holidays.US()))
+        self.assertFalse(isbday(datetime(2014, 1, 1, 17, 30),
+                         holidays=holidays.US()))
 
 
 class TestRelativeDelta(unittest.TestCase):
@@ -43,10 +51,21 @@ class TestRelativeDelta(unittest.TestCase):
                          relativedelta(months=1, days=1, bdays=23))
         self.assertEqual(relativedelta(date(2014, 1, 1), date(2014, 2, 2)),
                          relativedelta(months=-1, days=-1, bdays=-23))
+
+    def test_init_time(self):
         self.assertEqual(relativedelta(datetime(2015, 1, 5, 9, 15),
                                        datetime(2015, 1, 2, 16, 45)),
                          relativedelta(days=2, hours=16, minutes=30,
                                        bminutes=30))
+        self.assertEqual(relativedelta(datetime(2015, 1, 20, 21, 22),
+                                       datetime(2015, 1, 9, 3, 0)),
+                         relativedelta(days=11, hours=18, minutes=22,
+                                       bdays=7, bhours=8, bminutes=0))
+        self.assertEqual(relativedelta(datetime(2015, 1, 20, 21, 22),
+                                       datetime(2015, 1, 9, 3, 0),
+                                       holidays=holidays.US()),
+                         relativedelta(days=11, hours=18, minutes=22,
+                                       bdays=6, bhours=8, bminutes=0))
 
     def test_add(self):
         rd1 = relativedelta(years=+1, months=+2, bdays=+3, days=+4,

@@ -43,22 +43,18 @@ class relativedelta(rd):
             d2 = min(dt1, dt2)
             if d1.weekday() in (5, 6) or d1 in self.holidays:
                 bdays += 1
-            while d1.second != d2.second:
-                d2 += rd(seconds=+1)
-                bseconds += 1
-                while d2.hour < 9 or d2.hour >= 17:
-                    d2 += rd(hours=+1)
-            while d1.minute != d2.minute:
-                d2 += rd(minutes=+1)
-                bminutes += 1
-                while d2.hour < 9 or d2.hour >= 17:
-                    d2 += rd(hours=+1)
             while d1.hour != d2.hour:
                 d2 += rd(hours=+1)
-                bhours += 1
-                while (d1.hour >= 9 and d2.hour < 9) \
-                        or (d1.hour < 17 and d2.hour >= 17):
-                    d2 += rd(hours=+1)
+                if d2.hour >= 9 and d2.hour < 17:
+                    bhours += 1
+            while d1.minute != d2.minute:
+                d2 += rd(minutes=+1)
+                if d2.hour >= 9 and d2.hour < 17:
+                    bminutes += 1
+            while d1.second != d2.second:
+                d2 += rd(seconds=+1)
+                if d2.hour >= 9 and d2.hour < 17:
+                    bseconds += 1
             while d1 > d2:
                 d2 += rd(days=+1)
                 if d2.weekday() not in (5, 6) and d2 not in self.holidays:
