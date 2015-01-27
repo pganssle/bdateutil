@@ -106,6 +106,7 @@ class relativedelta(rd):
 
     def __sub__(self, other):
         ret = rd.__sub__(self, other)
+        ret.__class__ = relativedelta
         for attr in ('bdays', 'bhours', 'bminutes', 'bseconds'):
             if getattr(self, attr, None) is not None:
                 setattr(ret, attr, getattr(self, attr))
@@ -170,11 +171,10 @@ class relativedelta(rd):
                              microsecond=self.microsecond)
 
     def __eq__(self, other):
-        if self.bdays is not None:
-            for attr in ('bdays', 'bhours', 'bminutes', 'bseconds'):
-                if getattr(other, attr, None) is not None:
-                    return rd.__eq__(self, other) \
-                        and getattr(self, attr) == getattr(other, attr)
+        for attr in ('bdays', 'bhours', 'bminutes', 'bseconds'):
+            if getattr(other, attr, None) is not None:
+                if getattr(self, attr, None) != getattr(other, attr, None):
+                    return False
         return rd.__eq__(self, other)
 
     def __ne__(self, other):

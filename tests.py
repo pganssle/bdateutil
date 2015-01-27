@@ -122,7 +122,7 @@ class TestRelativeDelta(unittest.TestCase):
                             bhours=+6, bminutes=-5, bseconds=+4,
                             hours=-3, minutes=+2, seconds=-1)
         rd3 = relativedelta(years=-9, months=+11, bdays=-5, days=+11,
-                            bhours=+2, bminutes=+11, bseconds=+3,
+                            bhours=-1, bminutes=+11, bseconds=+3,
                             hours=+11, minutes=+7, seconds=+11)
         self.assertEqual(rd1 - rd2, rd3)
 
