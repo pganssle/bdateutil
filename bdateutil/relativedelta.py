@@ -9,7 +9,7 @@
 #  License: MIT (see LICENSE file)
 
 
-from collections import Counter
+from collections import defaultdict
 from datetime import date, datetime
 
 from dateutil.relativedelta import relativedelta as rd
@@ -36,7 +36,7 @@ class relativedelta(rd):
             # Call super init before setting self.bdays to avoid base __radd__
             # from calling child __add__ and creating infinite loop
             rd.__init__(self, dt1, dt2, *args, **kwargs)
-            c = Counter()
+            c = defaultdict(int)
             d1 = max(dt1, dt2)
             d2 = min(dt1, dt2)
             if d1.weekday() in (5, 6) or d1 in self.holidays:
