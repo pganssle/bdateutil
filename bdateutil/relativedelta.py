@@ -9,6 +9,7 @@
 #  License: MIT (see LICENSE file)
 
 
+from collections import Counter
 from datetime import date, datetime
 
 from dateutil.relativedelta import relativedelta as rd
@@ -35,34 +36,24 @@ class relativedelta(rd):
             # Call super init before setting self.bdays to avoid base __radd__
             # from calling child __add__ and creating infinite loop
             rd.__init__(self, dt1, dt2, *args, **kwargs)
-            bdays = 0
-            bhours = 0
-            bminutes = 0
-            bseconds = 0
+            c = Counter()
             d1 = max(dt1, dt2)
             d2 = min(dt1, dt2)
             if d1.weekday() in (5, 6) or d1 in self.holidays:
-                bdays += 1
-            while d1.hour != d2.hour:
-                d2 += rd(hours=+1)
-                if d2.hour >= 9 and d2.hour < 17:
-                    bhours += 1
-            while d1.minute != d2.minute:
-                d2 += rd(minutes=+1)
-                if d2.hour >= 9 and d2.hour < 17:
-                    bminutes += 1
-            while d1.second != d2.second:
-                d2 += rd(seconds=+1)
-                if d2.hour >= 9 and d2.hour < 17:
-                    bseconds += 1
+                c['bdays'] += 1
+            for attr in ('bhours', 'bminutes', 'bseconds'):
+                while getattr(d1, attr[1:-1]) != getattr(d2, attr[1:-1]):
+                    d2 += rd(**{attr[1:]: +1})
+                    if d2.hour >= 9 and d2.hour < 17:
+                        c[attr] += 1
             while d1 > d2:
                 d2 += rd(days=+1)
                 if d2.weekday() not in (5, 6) and d2 not in self.holidays:
-                    bdays += 1
-            self.bdays = bdays
-            self.bhours = bhours
-            self.bminutes = bminutes
-            self.bseconds = bseconds
+                    c['bdays'] += 1
+            self.bdays = c['bdays']
+            self.bhours = c['bhours']
+            self.bminutes = c['bminutes']
+            self.bseconds = c['bseconds']
             if dt2 > dt1:
                 self.bdays *= -1
                 self.bhours *= -1
