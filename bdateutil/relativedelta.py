@@ -69,14 +69,16 @@ class relativedelta(rd):
     def __add__(self, other):
         if isinstance(other, relativedelta):
             ret = rd.__add__(self, other)
+            ret.__class__ = relativedelta
             for attr in ('bdays', 'bhours', 'bminutes', 'bseconds'):
                 if getattr(self, attr, None) is not None:
-                    setattr(ret, attr, None)
-                elif getattr(other, attr, None) is None:
-                    setattr(ret, attr, getattr(self, attr))
-                else:
-                    setattr(ret, attr,
-                            getattr(self, attr) + getattr(other, attr))
+                    if getattr(other, attr, None) is not None:
+                        setattr(ret, attr,
+                                getattr(self, attr) + getattr(other, attr))
+                    else:
+                        setattr(ret, attr, getattr(self, attr))
+                elif getattr(other, attr, None) is not None:
+                    setattr(ret, attr, getattr(other, attr))
             return ret
         ret = parse(other)
         # If we are adding any time (not just dates) the ret object to return
@@ -172,9 +174,10 @@ class relativedelta(rd):
 
     def __eq__(self, other):
         for attr in ('bdays', 'bhours', 'bminutes', 'bseconds'):
-            if getattr(other, attr, None) is not None:
-                if getattr(self, attr, None) != getattr(other, attr, None):
-                    return False
+            if getattr(self, attr, None) is not None and \
+                    getattr(other, attr, None) is not None and \
+                    getattr(self, attr, None) != getattr(other, attr, None):
+                return False
         return rd.__eq__(self, other)
 
     def __ne__(self, other):
@@ -185,7 +188,7 @@ class relativedelta(rd):
         for attr in ["years", "months", "days", "leapdays", "bdays",
                      "hours", "minutes", "seconds", "microseconds",
                      "bhours", "bminutes", "bseconds"]:
-            value = getattr(self, attr)
+            value = getattr(self, attr, None)
             if value:
                 l.append("%s=%+d" % (attr, value))
         for attr in ["year", "month", "day", "weekday",
