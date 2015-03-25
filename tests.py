@@ -9,15 +9,17 @@
 #  License: MIT (see LICENSE file)
 
 
+import datetime as dt
 import unittest
-from datetime import date, datetime
 
 import holidays
+
 
 from bdateutil import isbday
 from bdateutil import relativedelta
 from bdateutil import parse
 from bdateutil.rrule import *
+from bdateutil import date, datetime
 
 from testdateutil import *
 
@@ -263,6 +265,20 @@ class TestRRule(unittest.TestCase):
                          [datetime(2014, 1, 1, 0, 0),
                           datetime(2014, 1, 2, 0, 0),
                           datetime(2014, 1, 3, 0, 0)])
+
+
+class TestDateTime(unittest.TestCase):
+
+    def test_date(self):
+        self.assertEqual(date("2015-03-25"), dt.date(2015, 3, 25))
+        self.assertEqual(date("1/2/2014"), dt.date(2014, 1, 2))
+        self.assertEqual(date(1388577600), dt.date(2014, 1, 1))
+        self.assertRaises(ValueError, lambda: date("abc"))
+        self.assertRaises(TypeError, lambda: date(['a', 'b', 'c']))
+
+    def test_datetime(self):
+        self.assertEqual(datetime("2015-03-25 12:00"),
+                         dt.datetime(2015, 3, 25, 12, 0))
 
 
 if __name__ == "__main__":

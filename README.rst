@@ -244,6 +244,26 @@ following additional features:
     >>> # bdateutil also provides an easier way
     >>> from bdateutil import relativedelta
 
+9. Enhanced versions of the built-in `datetime` objects are available.
+
+.. code-block:: python
+
+    # Import from bdateutil instead of datetime
+    >>> from bdateutil import date, datetime
+
+    # Takes new, optional one-argument initialization which is parsed
+    # by bdateutil.parser
+    >>> date("2015-03-25")
+    datetime.date(2015, 3, 25)
+    >>> datetime(1042349200)
+    datetime.datetime(2003, 1, 12, 0, 26, 40)
+
+    ## Pass 99 as the day to return the last day of the month
+    >>> date(2015, 2, 99)
+    date(2015, 2, 28)
+    >>> datetime(2015, 2, 99, 12, 0)
+    datetime(2015, 2, 28, 12, 0)
+
 
 Development Version
 -------------------
