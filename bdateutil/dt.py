@@ -38,3 +38,14 @@ class datetime(basedatetime):
                 args = list(args)
                 args[2] = calendar.monthrange(args[0], args[1])[1]
         return basedatetime.__new__(self, *args, **kwargs)
+
+
+def eomday(target):
+    if isinstance(target, basedatetime):
+        return basedatetime(target.year, target.month,
+                            calendar.monthrange(target.year, target.month)[1],
+                            target.hour, target.minute, target.second,
+                            target.microsecond)
+    else:
+        return basedate(target.year, target.month,
+                        calendar.monthrange(target.year, target.month)[1])

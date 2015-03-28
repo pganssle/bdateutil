@@ -15,7 +15,7 @@ from bdateutil.parser import parse
 from bdateutil.relativedelta import relativedelta
 from bdateutil.relativedelta import MO, TU, WE, TH, FR, SA, SU
 from bdateutil.rrule import *
-from bdateutil.dt import date, datetime
+from bdateutil.dt import date, datetime, eomday
 
 
 def isbday(dt, holidays=()):

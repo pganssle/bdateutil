@@ -244,7 +244,7 @@ following additional features:
     >>> # bdateutil also provides an easier way
     >>> from bdateutil import relativedelta
 
-9. Enhanced versions of the built-in `datetime` objects are available.
+9. Enhanced versions of the built-in :code:`datetime` objects are available.
 
 .. code-block:: python
 
@@ -258,11 +258,22 @@ following additional features:
     >>> datetime(1042349200)
     datetime.datetime(2003, 1, 12, 0, 26, 40)
 
-    ## Pass 99 as the day to return the last day of the month
+    # Pass 99 as the day to return the last day of the month
     >>> date(2015, 2, 99)
     date(2015, 2, 28)
     >>> datetime(2015, 2, 99, 12, 0)
     datetime(2015, 2, 28, 12, 0)
+
+10. New function :code:`eomday` will take a date or datetime object and return
+    an object of the same type with the day set to the last day of the month.
+
+.. code-block:: python
+
+    >>> from bdateutil import eomday
+    >>> eomday(date("2015-02-15"))
+    date(2015, 2, 28)
+    >>> eomday(datetime("2015-03-01 12:34"))
+    datetime(2015, 3, 31, 12, 34)
 
 
 Development Version

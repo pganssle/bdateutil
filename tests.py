@@ -19,7 +19,7 @@ from bdateutil import isbday
 from bdateutil import relativedelta
 from bdateutil import parse
 from bdateutil.rrule import *
-from bdateutil import date, datetime
+from bdateutil import date, datetime, eomday
 
 from testdateutil import *
 
@@ -279,6 +279,11 @@ class TestDateTime(unittest.TestCase):
     def test_datetime(self):
         self.assertEqual(datetime("2015-03-25 12:00"),
                          dt.datetime(2015, 3, 25, 12, 0))
+
+    def test_eomday(self):
+        self.assertEqual(eomday(date("2015-02-15")), dt.date(2015, 2, 28))
+        self.assertEqual(eomday(datetime("2015-03-01 12:34")),
+                         dt.datetime(2015, 3, 31, 12, 34))
 
 
 if __name__ == "__main__":
