@@ -262,6 +262,15 @@ class TestRRule(unittest.TestCase):
                           datetime(2014, 1, 2, 0, 0),
                           datetime(2014, 1, 3, 0, 0),
                           datetime(2014, 1, 6, 0, 0)])
+        until = parse("2014-01-09")
+        self.assertEqual(list(rrule(BDAILY, dtstart=start, until=until)),
+                         [datetime(2014, 1, 1, 0, 0),
+                          datetime(2014, 1, 2, 0, 0),
+                          datetime(2014, 1, 3, 0, 0),
+                          datetime(2014, 1, 6, 0, 0),
+                          datetime(2014, 1, 7, 0, 0),
+                          datetime(2014, 1, 8, 0, 0),
+                          datetime(2014, 1, 9, 0, 0)])
 
     def test_parse(self):
         self.assertEqual(list(rrule(BDAILY, count=4, dtstart="2014-01-01")),
@@ -274,6 +283,26 @@ class TestRRule(unittest.TestCase):
                          [datetime(2014, 1, 1, 0, 0),
                           datetime(2014, 1, 2, 0, 0),
                           datetime(2014, 1, 3, 0, 0)])
+
+    def test_holidays(self):
+        self.assertEqual(list(rrule(BDAILY, count=4, dtstart="2015-07-01")),
+                         [datetime(2015, 7, 1, 0, 0),
+                          datetime(2015, 7, 2, 0, 0),
+                          datetime(2015, 7, 3, 0, 0),
+                          datetime(2015, 7, 6, 0, 0)])
+        rrule.holidays = holidays.US()
+        self.assertEqual(list(rrule(BDAILY, count=4, dtstart="2015-07-01")),
+                         [datetime(2015, 7, 1, 0, 0),
+                          datetime(2015, 7, 2, 0, 0),
+                          datetime(2015, 7, 6, 0, 0),
+                          datetime(2015, 7, 7, 0, 0)])
+        self.assertEqual(list(rrule(BDAILY, count=4, dtstart="2015-07-01",
+                              holidays=holidays.CA())),
+                         [datetime(2015, 7, 2, 0, 0),
+                          datetime(2015, 7, 3, 0, 0),
+                          datetime(2015, 7, 6, 0, 0),
+                          datetime(2015, 7, 7, 0, 0)])
+        del rrule.holidays
 
 
 class TestDateTime(unittest.TestCase):

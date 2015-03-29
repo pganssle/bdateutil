@@ -238,6 +238,13 @@ following additional features:
     >>> list(rrule(BDAILY, dtstart="2014-01-01", until="2014-01-31",
                    holidays=holidays.Canada()))
 
+    # Add default set of holidays to rrule so you don't have to explicitly pass
+    # a holiday list each time you call rrule
+    >>> rrule.holidays = holidays.US()
+    # You can still pass a holidays argument to override the default setting
+    >>> list(rrule(BDAILY, dtstart="2014-01-01", until="2014-01-31",
+                   holidays=holidays.Canada()))
+
 8. Import shortcuts are available that make importing the bdateutil features a
    little easier than python-dateutil. However, importing from bdateutil using
    the longer method used by python-dateutil still works to remain 100%
