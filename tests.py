@@ -101,16 +101,6 @@ class TestRelativeDelta(unittest.TestCase):
         self.assertEqual("2014-11-15" + relativedelta(bdays=1),
                          datetime(2014, 11, 18))
 
-    def test_add_time(self):
-        self.assertEqual("2015-01-02 16:45" + relativedelta(bminutes=+30),
-                         datetime(2015, 1, 5, 9, 15))
-        self.assertEqual(date(2015, 1, 2) + relativedelta(bminutes=+30),
-                         datetime(2015, 1, 2, 9, 30))
-        relativedelta.btstart = time(7, 30)
-        self.assertEqual("2015-01-02 16:45" + relativedelta(bminutes=+30),
-                         datetime(2015, 1, 5, 7, 45))
-        del relativedelta.btstart
-
     def test_bdays_zero(self):
         self.assertEqual("2014-11-15" + relativedelta(bdays=0),
                          datetime(2014, 11, 17))
@@ -128,6 +118,22 @@ class TestRelativeDelta(unittest.TestCase):
                          date(2014, 1, 3))
         self.assertEqual(date(2014, 2, 3) + relativedelta(bdays=-19),
                          date(2014, 1, 7))
+        self.assertEqual(date(2014, 1, 3) + relativedelta(bdays=1.5),
+                         datetime(2014, 1, 6, 13, 0))
+
+    def test_radd_time(self):
+        self.assertEqual("2015-01-02 16:45" + relativedelta(bminutes=+30),
+                         datetime(2015, 1, 5, 9, 15))
+        self.assertEqual(date(2015, 1, 2) + relativedelta(bminutes=+30),
+                         datetime(2015, 1, 2, 9, 30))
+        self.assertEqual(date(2014, 1, 3) + relativedelta(bdays=1, bhours=4),
+                         datetime(2014, 1, 6, 13, 0))
+        relativedelta.btstart = time(7, 30)
+        self.assertEqual("2015-01-02 16:45" + relativedelta(bminutes=+30),
+                         datetime(2015, 1, 5, 7, 45))
+        self.assertEqual("2015-01-02 16:45" + relativedelta(bhours=+0.5),
+                         datetime(2015, 1, 5, 7, 45))
+        del relativedelta.btstart
 
     def test_sub(self):
         rd1 = relativedelta(years=+1, months=+2, bdays=+3, days=+4,

@@ -11,6 +11,7 @@
 
 from collections import defaultdict
 from datetime import date, datetime, time
+import math
 
 from dateutil.relativedelta import relativedelta as rd
 from dateutil.relativedelta import MO, TU, WE, TH, FR, SA, SU
@@ -72,6 +73,28 @@ class relativedelta(rd):
             self.bhours = bhours
             self.bminutes = bminutes
             self.bseconds = bseconds
+            bd = rd(datetime.combine(datetime.now(), self.btend),
+                    datetime.combine(datetime.now(), self.btstart))
+            if isinstance(self.bdays, float):
+                self.bhours = self.bhours or 0
+                self.bhours += (self.bdays % 1) * \
+                               (bd.hours + bd.minutes / 60 +
+                                bd.seconds / 60 / 60)
+                self.bdays = int(math.floor(self.bdays))
+                if self.bdays == 0:
+                    self.bdays = None
+            if isinstance(self.bhours, float):
+                self.bminutes = self.bminutes or 0
+                self.bminutes += (self.bhours % 1) * 60
+                self.bhours = int(math.floor(self.bhours))
+                if self.bhours == 0:
+                    self.bhours = None
+            if isinstance(self.bminutes, float):
+                self.bseconds = self.bseconds or 0
+                self.bseconds += int((self.bminutes % 1) * 60)
+                self.bminutes = int(math.floor(self.bminutes))
+                if self.bminutes == 0:
+                    self.bminutes = None
             rd.__init__(self, dt1, dt2, *args, **kwargs)
 
     def __add__(self, other):
