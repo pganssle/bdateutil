@@ -145,7 +145,9 @@ class TestRelativeDelta(unittest.TestCase):
         self.assertEqual(date(2014, 2, 3) - relativedelta(bdays=19),
                          date(2014, 1, 7))
         self.assertEqual("2014-11-15" - relativedelta(bdays=1),
-                         datetime(2014, 11, 13))
+                         datetime(2014, 11, 14))
+        self.assertEqual(date.today() - relativedelta(bdays=+45),
+                         date.today() + relativedelta(bdays=-45))
 
     def test_neg(self):
         self.assertEqual(-relativedelta(years=+1, bdays=-3),
