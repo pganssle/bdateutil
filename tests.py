@@ -18,7 +18,7 @@ from bdateutil import isbday
 from bdateutil import relativedelta
 from bdateutil import parse
 from bdateutil.rrule import *
-from bdateutil import date, datetime
+from bdateutil import date, datetime, time
 
 from testdateutil import *
 
@@ -345,6 +345,17 @@ class TestDateTime(unittest.TestCase):
         self.assertEqual(datetime.now().date(), dt.datetime.now().date())
         self.assertEqual(datetime.now(bdays=-45).date(),
                          (dt.datetime.now() - relativedelta(bdays=45)).date())
+
+    def test_time(self):
+        self.assertEqual(time("12:45:54"), time(12, 45, 54))
+        self.assertEqual(time("2:30 PM"), time(14, 30))
+        self.assertEqual(time(3, 40) - time(2, 30),
+                         relativedelta(hours=1, minutes=10))
+        self.assertEqual(time("3:40") - time(2, 30),
+                         relativedelta(hours=1, minutes=10))
+        self.assertEqual(time(2, 30) - time(3, 40),
+                         relativedelta(hours=-1, minutes=-10))
+        self.assertRaises(TypeError, lambda: datetime.now() - time(12, 34))
 
     def test_eomday(self):
         self.assertEqual(date("2015-02-15").eomday, dt.date(2015, 2, 28))

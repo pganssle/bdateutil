@@ -37,6 +37,7 @@
 
 from __future__ import unicode_literals
 
+from datetime import timedelta
 from six import StringIO, BytesIO, PY3
 import unittest
 import calendar
@@ -49,9 +50,7 @@ from bdateutil.relativedelta import *
 from bdateutil.rrule import *
 from bdateutil.tz import *
 from bdateutil import zoneinfo
-
-from datetime import time, timedelta
-from bdateutil import date, datetime
+from bdateutil import date, datetime, time
 
 
 try:

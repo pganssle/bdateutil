@@ -266,7 +266,7 @@ following additional features:
 .. code-block:: python
 
     # Import from bdateutil instead of datetime
-    >>> from bdateutil import date, datetime
+    >>> from bdateutil import date, datetime, time
 
     # Takes new, optional one-argument initialization which is parsed
     # by bdateutil.parser
@@ -274,12 +274,24 @@ following additional features:
     datetime.date(2015, 3, 25)
     >>> datetime(1042349200)
     datetime.datetime(2003, 1, 12, 0, 26, 40)
+    >>> time("2:30 PM")
+    datetime.time(14, 30)
 
-    # date.today() and datetime.now() will accept relativedelta parameters
+    # time has a `now()` staticmethod similar to datetime
+    >>> time.now()
+    datetime.time(14, 52, 57, 984686)
+
+    # date.today(), datetime.now() and time.now() will accept relativedelta parameters
     >>> date.today(days=+1) == date.today() + relativedelta(days=1)
     >>> datetime.now(bdays=-45) == datetime.now() - relativedelta(bdays=45)
-    # date.today() and datetime.now() use the optional default holidays setting
-    # from relativedelta.holidays if they are set
+    >>> time.now(hours=+1)
+    datetime.time(15, 52, 57, 984686)
+    # time.now(**kwargs) will return a datetime.time object if the resulting
+    # time is still in the current day or a datetime.datetime object if the
+    # result moves to another day
+    >>> time.now(days=+1) == datetime.now() + relativedelta(days=1)
+    # date.today(), datetime.now() and time.now() use the optional default
+    # holidays setting from relativedelta.holidays if they are set
 
     # Pass 99 as the day to return the last day of the month
     >>> date(2015, 2, 99)

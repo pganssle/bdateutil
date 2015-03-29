@@ -14,6 +14,7 @@ __version__ = '0.2-dev'
 import calendar
 from datetime import date as basedate
 from datetime import datetime as basedatetime
+from datetime import time as basetime
 
 from bdateutil.parser import parse
 from bdateutil.relativedelta import relativedelta
@@ -70,3 +71,30 @@ class datetime(basedatetime):
                         calendar.monthrange(self.year, self.month)[1],
                         self.hour, self.minute, self.second,
                         self.microsecond)
+
+
+class time(basetime):
+
+    def __new__(self, *args, **kwargs):
+        if len(args) == 1:
+            args = parse(args[0]).timetuple()[3:6]
+        return basetime.__new__(self, *args, **kwargs)
+
+    @staticmethod
+    def now(**kwargs):
+        ret = basedatetime.now() + relativedelta(**kwargs)
+        if ret.date() == basedatetime.now().date():
+            return ret.time()
+        return ret
+
+    def __sub__(self, other):
+        if isinstance(other, time):
+            return relativedelta(datetime.combine(datetime.now(), self),
+                                 datetime.combine(datetime.now(), other))
+        raise TypeError("Can't subtract type %s from type time." % type(other))
+
+    def __rsub__(self, other):
+        if isinstance(other, time):
+            return relativedelta(datetime.combine(datetime.now(), self),
+                                 datetime.combine(datetime.now(), other))
+        raise TypeError("Can't subtract type time from type %s." % type(other))
