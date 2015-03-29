@@ -10,7 +10,7 @@
 
 
 from collections import defaultdict
-from datetime import date, datetime
+from datetime import date, datetime, time
 
 from dateutil.relativedelta import relativedelta as rd
 from dateutil.relativedelta import MO, TU, WE, TH, FR, SA, SU
@@ -23,10 +23,16 @@ class relativedelta(rd):
 
     def __init__(self, dt1=None, dt2=None, bdays=None, holidays=None,
                  bhours=None, bminutes=None, bseconds=None,
-                 *args, **kwargs):
+                 btstart=None, btend=None, *args, **kwargs):
         self.holidays = holidays
         if self.holidays is None:
             self.holidays = getattr(relativedelta, 'holidays', ())
+        self.btstart = btstart
+        if self.btstart is None:
+            self.btstart = getattr(relativedelta, 'btstart', time(9))
+        self.btend = btend
+        if self.btend is None:
+            self.btend = getattr(relativedelta, 'btend', time(17))
         if dt1 and dt2:
             # Convert to datetime objects
             dt1 = parse(dt1)
@@ -46,7 +52,7 @@ class relativedelta(rd):
             for attr in ('bhours', 'bminutes', 'bseconds'):
                 while getattr(d1, attr[1:-1]) != getattr(d2, attr[1:-1]):
                     d2 += rd(**{attr[1:]: +1})
-                    if d2.hour >= 9 and d2.hour < 17:
+                    if d2.time() >= self.btstart and d2.time() < self.btend:
                         c[attr] += 1
             while d1 > d2:
                 d2 += rd(days=+1)
@@ -92,7 +98,9 @@ class relativedelta(rd):
             if getattr(self, attr, None) is not None:
                 while ret.weekday() in (5, 6) or ret in self.holidays:
                     ret += rd(days=+1)
-                while attr != "bdays" and (ret.hour < 9 or ret.hour >= 17):
+                while attr != "bdays" and \
+                        (ret.time() < self.btstart or
+                         ret.time() >= self.btend):
                     ret += rd(**{attr[1:]: +1})
                 i = getattr(self, attr)
                 a = +1 if i > 0 else -1
@@ -100,7 +108,9 @@ class relativedelta(rd):
                     ret += rd(**{attr[1:]: a})
                     while ret.weekday() in (5, 6) or ret in self.holidays:
                         ret += rd(days=a)
-                    while attr != "bdays" and (ret.hour < 9 or ret.hour >= 17):
+                    while attr != "bdays" and \
+                            (ret.time() < self.btstart or
+                             ret.time() >= self.btend):
                         ret += rd(**{attr[1:]: a})
                     i -= a
         return rd.__add__(self, ret)

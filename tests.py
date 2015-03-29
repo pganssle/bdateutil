@@ -106,6 +106,10 @@ class TestRelativeDelta(unittest.TestCase):
                          datetime(2015, 1, 5, 9, 15))
         self.assertEqual(date(2015, 1, 2) + relativedelta(bminutes=+30),
                          datetime(2015, 1, 2, 9, 30))
+        relativedelta.btstart = time(7, 30)
+        self.assertEqual("2015-01-02 16:45" + relativedelta(bminutes=+30),
+                         datetime(2015, 1, 5, 7, 45))
+        del relativedelta.btstart
 
     def test_bdays_zero(self):
         self.assertEqual("2014-11-15" + relativedelta(bdays=0),
