@@ -264,15 +264,10 @@ following additional features:
     >>> datetime(2015, 2, 99, 12, 0)
     datetime(2015, 2, 28, 12, 0)
 
-10. New function :code:`eomday` will take a date or datetime object and return
-    an object of the same type with the day set to the last day of the month.
-
-.. code-block:: python
-
-    >>> from bdateutil import eomday
-    >>> eomday(date("2015-02-15"))
+    # New property `eomday` returns the last day of the month
+    >>> date(2015, 2, 15).eomday
     date(2015, 2, 28)
-    >>> eomday(datetime("2015-03-01 12:34"))
+    >>> datetime(2015, 3, 25, 12, 34)
     datetime(2015, 3, 31, 12, 34)
 
 

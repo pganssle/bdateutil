@@ -19,7 +19,7 @@ from bdateutil import isbday
 from bdateutil import relativedelta
 from bdateutil import parse
 from bdateutil.rrule import *
-from bdateutil import date, datetime, eomday
+from bdateutil import date, datetime
 
 from testdateutil import *
 
@@ -275,14 +275,19 @@ class TestDateTime(unittest.TestCase):
         self.assertEqual(date(1388577600), dt.date(2014, 1, 1))
         self.assertRaises(ValueError, lambda: date("abc"))
         self.assertRaises(TypeError, lambda: date(['a', 'b', 'c']))
+        self.assertEqual(date(2015, 2, 99), date(2015, 2, 28))
+        self.assertEqual(date.today(), dt.date.today())
 
     def test_datetime(self):
-        self.assertEqual(datetime("2015-03-25 12:00"),
-                         dt.datetime(2015, 3, 25, 12, 0))
+        self.assertEqual(datetime("2015-03-25 12:34"),
+                         dt.datetime(2015, 3, 25, 12, 34))
+        self.assertEqual(datetime(2015, 3, 99, 23, 45),
+                         datetime(2015, 3, 31, 23, 45))
+        self.assertEqual(datetime.now().date(), dt.datetime.now().date())
 
     def test_eomday(self):
-        self.assertEqual(eomday(date("2015-02-15")), dt.date(2015, 2, 28))
-        self.assertEqual(eomday(datetime("2015-03-01 12:34")),
+        self.assertEqual(date("2015-02-15").eomday, dt.date(2015, 2, 28))
+        self.assertEqual(datetime("2015-03-01 12:34").eomday,
                          dt.datetime(2015, 3, 31, 12, 34))
 
 
