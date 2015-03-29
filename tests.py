@@ -317,6 +317,15 @@ class TestDateTime(unittest.TestCase):
         self.assertRaises(TypeError, lambda: date(['a', 'b', 'c']))
         self.assertEqual(date(2015, 2, 99), date(2015, 2, 28))
         self.assertEqual(date.today(), dt.date.today())
+        self.assertEqual(date.today(days=+1),
+                         dt.date.today() + relativedelta(days=+1))
+        self.assertEqual(date.today(bdays=+200, holidays=holidays.US()),
+                         dt.date.today()
+                         + relativedelta(bdays=+200, holidays=holidays.US()))
+        relativedelta.holidays = holidays.US()
+        self.assertEqual(date.today(bdays=+200),
+                         dt.date.today() + relativedelta(bdays=+200))
+        del relativedelta.holidays
 
     def test_datetime(self):
         self.assertEqual(datetime("2015-03-25 12:34"),
@@ -324,6 +333,8 @@ class TestDateTime(unittest.TestCase):
         self.assertEqual(datetime(2015, 3, 99, 23, 45),
                          datetime(2015, 3, 31, 23, 45))
         self.assertEqual(datetime.now().date(), dt.datetime.now().date())
+        self.assertEqual(datetime.now(bdays=-45).date(),
+                         (dt.datetime.now() - relativedelta(bdays=45)).date())
 
     def test_eomday(self):
         self.assertEqual(date("2015-02-15").eomday, dt.date(2015, 2, 28))

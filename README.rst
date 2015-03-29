@@ -275,6 +275,12 @@ following additional features:
     >>> datetime(1042349200)
     datetime.datetime(2003, 1, 12, 0, 26, 40)
 
+    # date.today() and datetime.now() will accept relativedelta parameters
+    >>> date.today(days=+1) == date.today() + relativedelta(days=1)
+    >>> datetime.now(bdays=-45) == datetime.now() - relativedelta(bdays=45)
+    # date.today() and datetime.now() use the optional default holidays setting
+    # from relativedelta.holidays if they are set
+
     # Pass 99 as the day to return the last day of the month
     >>> date(2015, 2, 99)
     date(2015, 2, 28)

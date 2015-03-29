@@ -39,6 +39,10 @@ class date(basedate):
                 args[2] = calendar.monthrange(args[0], args[1])[1]
         return basedate.__new__(self, *args, **kwargs)
 
+    @staticmethod
+    def today(**kwargs):
+        return basedate.today() + relativedelta(**kwargs)
+
     @property
     def eomday(self):
         return date(self.year, self.month,
@@ -55,6 +59,10 @@ class datetime(basedatetime):
                 args = list(args)
                 args[2] = calendar.monthrange(args[0], args[1])[1]
         return basedatetime.__new__(self, *args, **kwargs)
+
+    @staticmethod
+    def now(**kwargs):
+        return basedatetime.now() + relativedelta(**kwargs)
 
     @property
     def eomday(self):
