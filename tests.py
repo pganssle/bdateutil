@@ -14,7 +14,6 @@ import unittest
 
 import holidays
 
-
 from bdateutil import isbday
 from bdateutil import relativedelta
 from bdateutil import parse
@@ -38,6 +37,10 @@ class TestIsBday(unittest.TestCase):
                          holidays=holidays.US()))
         self.assertFalse(isbday(datetime(2014, 1, 1, 17, 30),
                          holidays=holidays.US()))
+        isbday.holidays = holidays.US()
+        self.assertFalse(isbday(date(2014, 1, 1)))
+        self.assertFalse(isbday(date(2014, 7, 4)))
+        self.assertTrue(isbday(date(2014, 7, 4), holidays=holidays.CA()))
 
 
 class TestRelativeDelta(unittest.TestCase):
@@ -68,6 +71,12 @@ class TestRelativeDelta(unittest.TestCase):
                                        holidays=holidays.US()),
                          relativedelta(days=11, hours=18, minutes=22,
                                        bdays=6, bhours=8, bminutes=0))
+        relativedelta.holidays = holidays.US()
+        self.assertEqual(relativedelta(datetime(2015, 1, 20, 21, 22),
+                                       datetime(2015, 1, 9, 3, 0)),
+                         relativedelta(days=11, hours=18, minutes=22,
+                                       bdays=6, bhours=8, bminutes=0))
+        del relativedelta.holidays
 
     def test_add(self):
         rd1 = relativedelta(years=+1, months=+2, bdays=+3, days=+4,

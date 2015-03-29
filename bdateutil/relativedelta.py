@@ -21,10 +21,12 @@ from bdateutil.parser import parse
 
 class relativedelta(rd):
 
-    def __init__(self, dt1=None, dt2=None, bdays=None, holidays=(),
+    def __init__(self, dt1=None, dt2=None, bdays=None, holidays=None,
                  bhours=None, bminutes=None, bseconds=None,
                  *args, **kwargs):
         self.holidays = holidays
+        if self.holidays is None:
+            self.holidays = getattr(relativedelta, 'holidays', ())
         if dt1 and dt2:
             # Convert to datetime objects
             dt1 = parse(dt1)

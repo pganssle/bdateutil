@@ -161,6 +161,11 @@ following additional features:
     >>> date(2014, 7, 3) + relativedelta(bdays=+2, holidays=UnitedStates())
     datetime.date(2014, 7, 8)
 
+    # Set relativedelta to always use holidays
+    >>> relativedelta.holidays = holidays.UnitedStates()
+    >>> date(2014, 7, 3) + relativedelta(bdays=+2)
+    datetime.date(2014, 7, 8)
+
 5. A new function :code:`isbday` which returns :code:`True` if the argument
    passed to it falls on a business day and :code:`False` if it is a weekend or
    holiday. Option keyword argument :code:`holidays` adds the ability to take
@@ -181,6 +186,11 @@ following additional features:
     # Take into account U.S. statutory holidays
     >>> import holidays
     >>> isbday("2014-01-01", holidays=holidays.US())
+    False
+
+    # Set isbday to always take into account holidays
+    >>> isbday.holidays = holidays.US()
+    >>> isbday("2014-01-01")
     False
 
 6. In addition to :code:`datetime` and :code:`date` types, relativedelta works
