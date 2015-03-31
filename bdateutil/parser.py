@@ -9,7 +9,7 @@
 #  License: MIT (see LICENSE file)
 
 
-from datetime import date, datetime
+from datetime import date, datetime, time
 
 from dateutil.parser import *
 from dateutil.parser import parser
@@ -30,6 +30,8 @@ def parse(timestr, parserinfo=None, **kwargs):
     elif isinstance(timestr, int) or isinstance(timestr, float):
         ret = datetime.fromtimestamp(timestr)
     elif isinstance(timestr, datetime) or isinstance(timestr, date):
+        ret = timestr
+    elif isinstance(timestr, time):
         ret = timestr
     else:
         raise TypeError("Can't convert %s to date." % type(timestr))

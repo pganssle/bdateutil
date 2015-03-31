@@ -40,8 +40,12 @@ class relativedelta(rd):
             dt2 = parse(dt2)
             if isinstance(dt1, date) and not isinstance(dt1, datetime):
                 dt1 = datetime.combine(dt1, datetime.min.time())
+            elif isinstance(dt1, time):
+                dt1 = datetime.combine(datetime.now(), dt1)
             if isinstance(dt2, date) and not isinstance(dt2, datetime):
                 dt2 = datetime.combine(dt2, datetime.min.time())
+            elif isinstance(dt2, time):
+                dt2 = datetime.combine(datetime.now(), dt2)
             # Call super init before setting self.bdays to avoid base __radd__
             # from calling child __add__ and creating infinite loop
             rd.__init__(self, dt1, dt2, *args, **kwargs)

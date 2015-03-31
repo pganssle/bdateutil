@@ -77,6 +77,8 @@ class TestRelativeDelta(unittest.TestCase):
                          relativedelta(days=11, hours=18, minutes=22,
                                        bdays=6, bhours=8, bminutes=0))
         del relativedelta.holidays
+        self.assertEqual(relativedelta(time(3, 40), time(2, 37)),
+                         relativedelta(hours=1, minutes=3))
 
     def test_add(self):
         rd1 = relativedelta(years=+1, months=+2, bdays=+3, days=+4,
