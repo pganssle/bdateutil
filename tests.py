@@ -351,13 +351,12 @@ class TestDateTime(unittest.TestCase):
     def test_time(self):
         self.assertEqual(time("12:45:54"), time(12, 45, 54))
         self.assertEqual(time("2:30 PM"), time(14, 30))
-        self.assertEqual(time(3, 40) - time(2, 30),
+        self.assertEqual(relativedelta(time("3:40"), time(2, 30)),
                          relativedelta(hours=1, minutes=10))
-        self.assertEqual(time("3:40") - time(2, 30),
+        self.assertEqual(relativedelta("3:40", time(2, 30)),
                          relativedelta(hours=1, minutes=10))
-        self.assertEqual(time(2, 30) - time(3, 40),
+        self.assertEqual(relativedelta(time(2, 30), time(3, 40)),
                          relativedelta(hours=-1, minutes=-10))
-        self.assertRaises(TypeError, lambda: datetime.now() - time(12, 34))
 
     def test_eomday(self):
         self.assertEqual(date("2015-02-15").eomday, dt.date(2015, 2, 28))

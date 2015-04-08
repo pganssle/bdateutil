@@ -86,15 +86,3 @@ class time(basetime):
         if ret.date() == basedatetime.now().date():
             return ret.time()
         return ret
-
-    def __sub__(self, other):
-        if isinstance(other, time):
-            return relativedelta(datetime.combine(datetime.now(), self),
-                                 datetime.combine(datetime.now(), other))
-        raise TypeError("Can't subtract type %s from type time." % type(other))
-
-    def __rsub__(self, other):
-        if isinstance(other, time):
-            return relativedelta(datetime.combine(datetime.now(), self),
-                                 datetime.combine(datetime.now(), other))
-        raise TypeError("Can't subtract type time from type %s." % type(other))
