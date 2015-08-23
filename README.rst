@@ -94,7 +94,7 @@ Documentation
 
 This section will outline the additional functionality of bdateutil only. For
 full documentation on the features provided by python-dateutil please see its
-documentation at https://labix.org/python-dateutil.
+documentation at https://dateutil.readthedocs.org.
 
 bdateutil is 100% backwards compatible with python-dateutil. You can replace
 :code:`dateutil` with :code:`bdateutil` across your entire project and
